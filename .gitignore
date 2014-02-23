@@ -1,0 +1,5 @@
+*.db
+*~
+*#
+daily_expenses.sql
+*.pyc
