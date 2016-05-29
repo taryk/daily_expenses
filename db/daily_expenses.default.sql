@@ -14,6 +14,7 @@ CREATE UNIQUE INDEX currencies_name ON currencies(name);
 INSERT INTO "currencies" ('id', 'name', 'sign') VALUES(1, 'UAH', '₴');
 INSERT INTO "currencies" ('id', 'name', 'sign') VALUES(2, 'USD', '$');
 INSERT INTO "currencies" ('id', 'name', 'sign') VALUES(3, 'EUR', '€');
+INSERT INTO "currencies" ('id', 'name', 'sign') VALUES(4, 'PLN', 'zł');
 
 DROP TABLE IF EXISTS "categories";
 CREATE TABLE "categories" (
