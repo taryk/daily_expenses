@@ -90,7 +90,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 {
                     'item_id': self.get_item_id(),
                     'category_id': self.get_category_id(),
-                    'value': self.get_value(),
+                    'cost': self.get_cost(),
                     'currency_id': self.get_currency_id(),
                     'user_id': self.get_user_id(),
                     'place_id': self.get_place_id(),
@@ -155,7 +155,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def get_note(self):
         return self.textNote.toPlainText()
 
-    def get_value(self):
+    def get_cost(self):
         return self.spinboxMoney.value()
 
     def get_datetime(self):

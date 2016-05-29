@@ -23,7 +23,7 @@ class TableModel():
         self.model.setHeaderData(0, Qt.Horizontal, QtGui.qApp.tr("ID"))
         self.model.setHeaderData(1, Qt.Horizontal, QtGui.qApp.tr("Item"))
         self.model.setHeaderData(2, Qt.Horizontal, QtGui.qApp.tr("Category"))
-        self.model.setHeaderData(3, Qt.Horizontal, QtGui.qApp.tr("Value"))
+        self.model.setHeaderData(3, Qt.Horizontal, QtGui.qApp.tr("Cost"))
         self.model.setHeaderData(4, Qt.Horizontal, QtGui.qApp.tr("Currency"))
         self.model.setHeaderData(5, Qt.Horizontal, QtGui.qApp.tr("By whom"))
         self.model.setHeaderData(6, Qt.Horizontal, QtGui.qApp.tr("Where"))

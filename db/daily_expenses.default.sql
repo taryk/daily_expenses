@@ -86,7 +86,7 @@ CREATE TABLE "balance" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "item_id" INTEGER NOT NULL,
     "category_id" INTEGER NOT NULL,
-    "value" REAL NOT NULL,
+    "cost" REAL NOT NULL,
     "currency_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
     "place_id" INTEGER NOT NULL,

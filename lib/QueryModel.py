@@ -12,7 +12,7 @@ class QueryModel():
 
         self.model.setQuery(
             """
-            SELECT b.id, i.name, c.sign || ' ' || (b.value * -(b.is_spending)),
+            SELECT b.id, i.name, c.sign || ' ' || (b.cost * -(b.is_spending)),
             b.qty || ' ' || m.short, g.id, u.full_name, p.name, b.date
             FROM balance b
             LEFT JOIN items i ON b.item_id = i.id
@@ -25,7 +25,7 @@ class QueryModel():
             """)
         self.model.setHeaderData(0, Qt.Horizontal, QtGui.qApp.tr("ID"))
         self.model.setHeaderData(1, Qt.Horizontal, QtGui.qApp.tr("Item"))
-        self.model.setHeaderData(2, Qt.Horizontal, QtGui.qApp.tr("Value"))
+        self.model.setHeaderData(2, Qt.Horizontal, QtGui.qApp.tr("Cost"))
         self.model.setHeaderData(3, Qt.Horizontal, QtGui.qApp.tr("Qty/Amount"))
         self.model.setHeaderData(4, Qt.Horizontal, QtGui.qApp.tr("Category"))
         self.model.setHeaderData(5, Qt.Horizontal, QtGui.qApp.tr("By whom"))

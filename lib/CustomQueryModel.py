@@ -13,7 +13,7 @@ class CustomQueryModel():
                 {'column': ['balance', 'id']},
                 {'column': ['items', 'name'], 'rel': ['item_id', 'id']},
                 {'column': ['balance', 'is_spending']},
-                {'column': ['balance', 'value']},
+                {'column': ['balance', 'cost']},
                 {'column': ['balance', 'qty']},
                 {'column': ['measures', 'short'], 'rel': ['measure_id', 'id']},
                 {'column': ['categories', 'name'], 'rel': ['category_id', 'id']},
@@ -35,13 +35,13 @@ class CustomQueryModel():
                     'edit': ['balance_item_id'],
                 },
                 {
-                    'title': 'Value',
+                    'title': 'Cost',
                     'source': lambda column: "%s %.2f" % (
                         column['currencies_sign'],
-                        (column['balance_value'] * column['balance_is_spending'])
+                        (column['balance_cost'] * column['balance_is_spending'])
                     ),
                     # TODO edit currency as well
-                    'edit': ['balance_value'],
+                    'edit': ['balance_cost'],
                 },
                 {
                     'title': 'Qty/Amount',

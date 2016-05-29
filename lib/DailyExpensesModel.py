@@ -36,10 +36,10 @@ class DailyExpensesModel():
         try:
             query_insert.prepare(
                 """
-                INSERT INTO balance (item_id, category_id, value,
+                INSERT INTO balance (item_id, category_id, cost,
                 currency_id, user_id, place_id, qty, measure_id, is_spending,
                 note, date)
-                VALUES (:item_id, :category_id, :value, :currency_id, :user_id,
+                VALUES (:item_id, :category_id, :cost, :currency_id, :user_id,
                 :place_id, :qty, :measure_id, :is_spending, :note, :date)
                 """)
             for column in data:
