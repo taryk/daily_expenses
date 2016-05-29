@@ -34,18 +34,32 @@ INSERT INTO "categories" ('id', 'name') VALUES(6, 'public utilities');
 INSERT INTO "categories" ('id', 'name') VALUES(7, 'hygiene products');
 INSERT INTO "categories" ('id', 'name') VALUES(8, 'devices');
 
-DROP TABLE IF EXISTS "places";
-CREATE TABLE "places" (
+DROP TABLE IF EXISTS "locations";
+CREATE TABLE "locations" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "name" TEXT NOT NULL,
-    "location" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
     "note" TEXT NULL,
     "cdate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "mdate" DATETIME NULL
 );
-CREATE UNIQUE INDEX places_name_location ON places(name, location);
-INSERT INTO "places" ('id', 'name', 'location') VALUES(1, 'central market', 'Lviv');
-INSERT INTO "places" ('id', 'name', 'location') VALUES(2, 'grocery store',  'Lviv');
+INSERT INTO "locations" ('id', 'city', 'country') VALUES(1, 'Lviv', 'Ukraine');
+INSERT INTO "locations" ('id', 'city', 'country') VALUES(2, 'Ternopil', 'Ukraine');
+CREATE UNIQUE INDEX locations_city_country ON locations(city, country);
+
+DROP TABLE IF EXISTS "places";
+CREATE TABLE "places" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "name" TEXT NOT NULL,
+    "location_id" INTEGER NOT NULL,
+    "note" TEXT NULL,
+    "cdate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "mdate" DATETIME NULL,
+    FOREIGN KEY(location_id) REFERENCES locations(id)
+);
+CREATE UNIQUE INDEX places_name ON places(name);
+INSERT INTO "places" ('id', 'name', 'location_id') VALUES(1, 'central market', 1);
+INSERT INTO "places" ('id', 'name', 'location_id') VALUES(2, 'grocery store',  1);
 
 DROP TABLE IF EXISTS "users";
 CREATE TABLE "users" (

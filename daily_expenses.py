@@ -28,6 +28,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.chbCurrentDate.toggled.connect(self.current_date)
         self.chbCurrentTime.toggled.connect(self.current_time)
         self.cbCurrency.currentIndexChanged.connect(self.change_currency)
+        self.cbWhere.currentIndexChanged.connect(self.change_place)
+        self.btnLocation.clicked.connect(self.change_location)
 
         # Timer
         self.date_timer = QTimer(self)
@@ -83,6 +85,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             (self.cbCurrency.itemData(self.cbCurrency.currentIndex()))['sign']
             + " "
         )
+
+    def change_place(self):
+        self.btnLocation.setText(
+            self.cbWhere.itemData(self.cbWhere.currentIndex())['location']
+        )
+
+    def change_location(self):
+        print("click")
 
     def add_item(self):
         if self.validate():
@@ -141,7 +151,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return self.cbByWhom.itemData(self.cbByWhom.currentIndex())
 
     def get_place_id(self):
-        return self.cbWhere.itemData(self.cbWhere.currentIndex())
+        return self.cbWhere.itemData(self.cbWhere.currentIndex())['id']
 
     def get_qty(self):
         return self.spinboxQty.value()
@@ -227,8 +237,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cbWhere.clear()
         for place in self.db_model.get_places():
             self.cbWhere.addItem(
-                '%s (%s)' % (place['name'], place['location']),
-                place['id']
+                place['name'],
+                {
+                    'id': place['id'],
+                    'location': place['location']
+                }
             )
 
     def load_users(self):

@@ -147,7 +147,13 @@ class DailyExpensesModel():
         places = []
         select_places_query = QSqlQuery(db=self.db)
         if not select_places_query.exec_(
-                'SELECT id, name, location FROM places ORDER BY id'):
+            """
+            SELECT p.id, p.name, l.city, l.country
+            FROM places p
+            LEFT JOIN locations l ON p.location_id = l.id
+            ORDER BY p.id
+            """
+        ):
             _log("Places selection error[%s]: %s" % (
                 select_places_query.lastError().type(),
                 select_places_query.lastError().text()
@@ -157,7 +163,8 @@ class DailyExpensesModel():
             places.append({
                 'id': record.value('id'),
                 'name': record.value('name'),
-                'location': record.value('location'),
+                'location':
+                    record.value('city') + ', ' + record.value('country'),
             })
         return places
 
