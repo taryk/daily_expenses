@@ -3,8 +3,8 @@
 
 import sys
 
-from PySide.QtGui import QMainWindow, QApplication, QMessageBox
-from PySide.QtCore import QDate, QTime, QTimer, SIGNAL, Qt
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
+from PyQt5.QtCore import QDate, QTime, QTimer, pyqtSignal, Qt
 
 sys.path.append('lib')
 
@@ -31,11 +31,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Timer
         self.date_timer = QTimer(self)
-        self.connect(self.date_timer, SIGNAL('timeout()'),
-                     self.date_tick)
+        self.date_timer.timeout.connect(self.date_tick)
+
         self.time_timer = QTimer(self)
-        self.connect(self.time_timer, SIGNAL('timeout()'),
-                     self.time_tick)
+        self.time_timer.timeout.connect(self.time_tick)
 
         self.chbCurrentDate.setCheckState(Qt.Checked)
         self.chbCurrentTime.setCheckState(Qt.Checked)

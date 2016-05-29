@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from PySide.QtGui import QItemDelegate
+from PyQt5.QtWidget import QItemDelegate
 
 
 class CurrencyDelegate(QItemDelegate):

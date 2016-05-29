@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from PySide import QtGui
-from PySide.QtSql import *
+from PyQt5 import QtGui
+from PyQt5.QtSql import *
 from lib.Utils import _log
 from lib.CustomQueryModel import CustomQueryModel
 

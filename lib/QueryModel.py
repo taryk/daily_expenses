@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from PySide import QtGui
-from PySide.QtCore import Qt
-from PySide.QtSql import QSqlQueryModel
+from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
+from PyQt5.QtSql import QSqlQueryModel
 
 
 class QueryModel():

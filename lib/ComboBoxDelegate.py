@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from PySide.QtGui import QItemDelegate, QComboBox
-from PySide.QtCore import Qt
-from PySide.QtSql import QSqlQuery
+from PyQt5.QtWidgets import QItemDelegate, QComboBox
+from PyQt5.QtCore import Qt
+from PyQt5.QtSql import QSqlQuery
 from lib.Utils import _log
 
 

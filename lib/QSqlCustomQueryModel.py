@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from PySide import QtCore
-from PySide.QtSql import QSqlQuery
-from PySide.QtCore import QAbstractTableModel
+from PyQt5 import QtCore
+from PyQt5.QtSql import QSqlQuery
+from PyQt5.QtCore import QAbstractTableModel
 
 
 class QSqlCustomQueryModel(QAbstractTableModel):
