@@ -160,7 +160,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return self.cbUnits.itemData(self.cbUnits.currentIndex())
 
     def is_spending(self):
-        return self.rbSpending.isChecked() and 1 or 0
+        return self.rbExpense.isChecked() and 1 or 0
 
     def get_note(self):
         return self.textNote.toPlainText()
