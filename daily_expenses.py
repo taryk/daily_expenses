@@ -45,27 +45,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.db_model = DailyExpensesModel()
 
         self.model = self.db_model.get_model()
-        self.tableView.setItemDelegateForColumn(
-            self.COL_ITEMS, ComboBoxDelegate(
-                self.tableView, db=self.db_model.db, table='items'
-            )
-        )
-        self.tableView.setItemDelegateForColumn(
-            self.COL_CATEGORIES, ComboBoxDelegate(
+        self.set_column_delegators({
+            self.COL_ITEMS: ComboBoxDelegate(
+               self.tableView, db=self.db_model.db, table='items'
+            ),
+            self.COL_CATEGORIES: ComboBoxDelegate(
                 self.tableView, db=self.db_model.db, table='categories'
-            )
-        )
-        self.tableView.setItemDelegateForColumn(
-            self.COL_USERS, ComboBoxDelegate(
+            ),
+            self.COL_USERS: ComboBoxDelegate(
                 self.tableView,
                 db=self.db_model.db, table='users', data_column='full_name'
-            )
-        )
-        self.tableView.setItemDelegateForColumn(
-            self.COL_PLACES, ComboBoxDelegate(
+            ),
+            self.COL_PLACES: ComboBoxDelegate(
                 self.tableView, db=self.db_model.db, table='places'
-            )
-        )
+            ),
+        })
 
         self.tableView.setModel(self.model)
         self.tableView.show()
@@ -79,6 +73,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.load_measures()
 
         self.clear_fields()
+
+    def set_column_delegators(self, widgets):
+        for column, widget in widgets.items():
+            self.tableView.setItemDelegateForColumn(column, widget)
 
     def change_currency(self):
         self.spinboxMoney.setPrefix(
