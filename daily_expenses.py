@@ -21,6 +21,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     COL_USERS = 4
     COL_PLACES = 5
 
+    data_mapping = {}
+
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
@@ -64,14 +66,38 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableView.setModel(self.model)
         self.tableView.show()
 
-        # Load data
-        self.load_currencies()
-        self.load_categories()
-        self.load_items()
-        self.load_users()
-        self.load_places()
-        self.load_measures()
-
+        self.load_data({
+            'currencies': {
+                'widget': self.cbCurrency,
+                'title': '{name}',
+                'extra_data': ['id', 'sign'],
+            },
+            'categories': {
+                'widget': self.cbCategory,
+                'title': '{name}',
+                'extra_data': 'id',
+            },
+            'items': {
+                'widget': self.cbItem,
+                'title': '{name}',
+                'extra_data': 'id',
+            },
+            'places': {
+                'widget': self.cbWhere,
+                'title': '{name}',
+                'extra_data': ['id', 'location'],
+            },
+            'users': {
+                'widget': self.cbByWhom,
+                'title': '{full_name}',
+                'extra_data': 'id',
+            },
+            'measures': {
+                'widget': self.cbUnits,
+                'title': '{name} ({short})',
+                'extra_data': ['id'],
+            }
+        })
         self.clear_fields()
 
     def set_column_delegators(self, widgets):
@@ -134,7 +160,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.db_model.insert_item(name=self.cbItem.currentText())
         item_id = self.db_model.get_item_id(name=self.cbItem.currentText())
         if item_id:
-            self.load_items()
+            self.reload("items")
             return item_id
         else:
             return None
@@ -209,51 +235,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return False
         return True
 
-    # TODO all load_* methods look similar. Try to follow DRY
-    def load_currencies(self):
-        self.cbCurrency.clear()
-        for currency in self.db_model.get_currencies():
-            self.cbCurrency.addItem(
-                currency['name'],
-                {
-                    'id': currency['id'],
-                    'sign': currency['sign']
-                }
-            )
+    def load_data(self, data_mapping):
+        self.data_mapping = data_mapping
+        for things, details in self.data_mapping.items():
+            self._load_things(things, details)
 
-    def load_categories(self):
-        self.cbCategory.clear()
-        for category in self.db_model.get_categories():
-            self.cbCategory.addItem(category['name'], category['id'])
+    def _load_things(self, things, details):
+        details['widget'].clear()
+        stuff = getattr(self.db_model, 'get_' + things)()
+        for thing in stuff:
+            title = details['title'].format(**thing)
+            if isinstance(details['extra_data'], str):
+                extra_data = thing[details['extra_data']]
+            else:
+                extra_data = dict(
+                    zip(
+                        details['extra_data'],
+                        map(lambda x: thing[x], details['extra_data'])
+                    )
+                )
+            details['widget'].addItem(title, extra_data)
 
-    def load_items(self):
-        self.cbItem.clear()
-        for item in self.db_model.get_items():
-            self.cbItem.addItem(item['name'], item['id'])
-
-    def load_places(self):
-        self.cbWhere.clear()
-        for place in self.db_model.get_places():
-            self.cbWhere.addItem(
-                place['name'],
-                {
-                    'id': place['id'],
-                    'location': place['location']
-                }
-            )
-
-    def load_users(self):
-        self.cbByWhom.clear()
-        for user in self.db_model.get_users():
-            self.cbByWhom.addItem(user['full_name'], user['id'])
-
-    def load_measures(self):
-        self.cbUnits.clear()
-        for measure in self.db_model.get_measures():
-            self.cbUnits.addItem(
-                '%s (%s)' % (measure['name'], measure['short']),
-                measure['id']
-            )
+    def reload(self, things):
+        self._load_things(things, self.data_mapping[things])
 
     def clear_fields(self):
         self.spinboxMoney.setValue(0.0)
