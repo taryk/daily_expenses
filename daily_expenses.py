@@ -166,7 +166,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return self.cbCategory.itemData(self.cbCategory.currentIndex())
 
     def get_currency_id(self):
-        return (self.cbCurrency.itemData(self.cbCurrency.currentIndex()))['id']
+        return self.cbCurrency.itemData(self.cbCurrency.currentIndex())['id']
 
     def get_user_id(self):
         return self.cbByWhom.itemData(self.cbByWhom.currentIndex())
