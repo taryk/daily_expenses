@@ -120,21 +120,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def add_item(self):
         if self.validate():
-            self.db_model.insert(
-                {
-                    'item_id': self.get_item_id(),
-                    'category_id': self.get_category_id(),
-                    'cost': self.get_cost(),
-                    'currency_id': self.get_currency_id(),
-                    'user_id': self.get_user_id(),
-                    'place_id': self.get_place_id(),
-                    'qty': self.get_qty(),
-                    'measure_id': self.get_measure_id(),
-                    'is_spending': self.is_spending(),
-                    'note': self.get_note(),
-                    'date': self.get_datetime(),
-                }
+            fields = [
+                'item_id',    'category_id', 'user_id',  'cost', 'qty',
+                'measure_id', 'is_spending', 'place_id', 'note', 'date',
+                'currency_id'
+            ]
+            data = dict(
+                zip(
+                    fields,
+                    map(lambda what: getattr(self, 'get_' + what)(), fields)
+                )
             )
+            self.db_model.insert(data)
             self.clear_fields()
             self.model.load_data()
         else:
@@ -183,7 +180,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def get_measure_id(self):
         return self.cbUnits.itemData(self.cbUnits.currentIndex())
 
-    def is_spending(self):
+    def get_is_spending(self):
         return self.rbExpense.isChecked() and 1 or 0
 
     def get_note(self):
@@ -192,7 +189,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def get_cost(self):
         return self.spinboxMoney.value()
 
-    def get_datetime(self):
+    def get_date(self):
         return(self.dateEdit.date().toString("yyyy.MM.dd") + " " +
                self.timeEdit.time().toString("hh:mm:ss"))
 
