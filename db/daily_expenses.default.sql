@@ -28,7 +28,7 @@ CREATE UNIQUE INDEX categories_name ON categories(name);
 INSERT INTO "categories" ('id', 'name') VALUES(1, 'groceries');
 INSERT INTO "categories" ('id', 'name') VALUES(2, 'monthly expenses');
 INSERT INTO "categories" ('id', 'name') VALUES(3, 'public transport');
-INSERT INTO "categories" ('id', 'name') VALUES(4, 'abstergents');
+INSERT INTO "categories" ('id', 'name') VALUES(4, 'detergent');
 INSERT INTO "categories" ('id', 'name') VALUES(5, 'cosmetics');
 INSERT INTO "categories" ('id', 'name') VALUES(6, 'public utilities');
 INSERT INTO "categories" ('id', 'name') VALUES(7, 'hygiene products');
