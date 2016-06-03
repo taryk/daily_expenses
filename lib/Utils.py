@@ -4,4 +4,4 @@ import sys
 
 
 def _log(*args):
-    print(*args, file=sys.stderr)
+    print('log:', *args, file=sys.stderr)
