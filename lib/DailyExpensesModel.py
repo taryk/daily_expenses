@@ -5,7 +5,7 @@ from PyQt5.QtSql import *
 from lib.Utils import _log
 from lib.CustomQueryModel import CustomQueryModel
 from lib.extensions import db
-from models import Items, Categories, Currencies, Locations
+from models import Items, Categories, Currencies, Locations, Places
 
 
 class DailyExpensesModel():
@@ -82,29 +82,7 @@ class DailyExpensesModel():
         return self.orm_db.query(Locations).all()
 
     def get_places(self):
-        places = []
-        select_places_query = QSqlQuery(db=self.db)
-        if not select_places_query.exec_(
-            """
-            SELECT p.id, p.name, l.city, l.country
-            FROM places p
-            LEFT JOIN locations l ON p.location_id = l.id
-            ORDER BY p.id
-            """
-        ):
-            _log("Places selection error[%s]: %s" % (
-                select_places_query.lastError().type(),
-                select_places_query.lastError().text()
-            ))
-        while select_places_query.next():
-            record = select_places_query.record()
-            places.append({
-                'id': record.value('id'),
-                'name': record.value('name'),
-                'location':
-                    record.value('city') + ', ' + record.value('country'),
-            })
-        return places
+        return self.orm_db.query(Places).all()
 
     def get_users(self):
         users = []
