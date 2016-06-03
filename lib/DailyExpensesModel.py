@@ -5,7 +5,7 @@ from PyQt5.QtSql import *
 from lib.Utils import _log
 from lib.CustomQueryModel import CustomQueryModel
 from lib.extensions import db
-from models import Items, Categories, Currencies
+from models import Items, Categories, Currencies, Locations
 
 
 class DailyExpensesModel():
@@ -77,6 +77,9 @@ class DailyExpensesModel():
 
     def get_currencies(self):
         return self.orm_db.query(Currencies).all()
+
+    def get_locations(self):
+        return self.orm_db.query(Locations).all()
 
     def get_places(self):
         places = []
