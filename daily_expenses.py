@@ -6,8 +6,6 @@ import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5.QtCore import QDate, QTime, QTimer, pyqtSignal, Qt
 
-sys.path.append('lib')
-
 from lib.ComboBoxDelegate import ComboBoxDelegate
 from lib.DailyExpensesModel import DailyExpensesModel
 from lib.Utils import _log
