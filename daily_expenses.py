@@ -3,6 +3,8 @@
 
 import sys
 
+from datetime import datetime
+
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5.QtCore import QDate, QTime, QTimer, pyqtSignal, Qt
 
@@ -193,8 +195,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return self.spinboxMoney.value()
 
     def get_datetime(self):
-        return(self.dateEdit.date().toString("yyyy.MM.dd") + " " +
-               self.timeEdit.time().toString("hh:mm:ss"))
+        return datetime.combine(self.dateEdit.date().toPyDate(),
+                                self.timeEdit.time().toPyTime())
 
     def date_tick(self):
         self.dateEdit.setDate(QDate.currentDate())

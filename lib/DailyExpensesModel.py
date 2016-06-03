@@ -6,7 +6,7 @@ from lib.Utils import _log
 from lib.CustomQueryModel import CustomQueryModel
 from lib.extensions import db
 from models import Items, Categories, Currencies, Locations, Places, Users, \
-    Measures
+    Measures, Balance
 
 
 class DailyExpensesModel():
@@ -36,29 +36,14 @@ class DailyExpensesModel():
         return CustomQueryModel(db=self.db).get_model()
 
     def insert(self, data=dict()):
-        query_insert = QSqlQuery()
         try:
-            query_insert.prepare(
-                """
-                INSERT INTO balance (item_id, category_id, cost,
-                currency_id, user_id, place_id, qty, measure_id, is_spending,
-                note, datetime)
-                VALUES (:item_id, :category_id, :cost, :currency_id, :user_id,
-                :place_id, :qty, :measure_id, :is_spending, :note, :datetime)
-                """)
-            for column in data:
-                query_insert.bindValue(':'+column, data[column])
-
-            if not query_insert.exec_():
-                _log("Can't add. Error[%s]: %s" % (
-                    query_insert.lastError().type(),
-                    query_insert.lastError().text()
-                ))
-                _log("bound values: %s" % str(query_insert.boundValues()))
+            new_balance_record = Balance(**data)
+            self.orm_db.add(new_balance_record)
+            self.orm_db.commit()
+            return new_balance_record.id
         except Exception as e:
             _log(e)
             return
-        self.db.commit()
 
     def insert_item(self, name):
         try:
