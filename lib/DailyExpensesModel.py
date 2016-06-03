@@ -5,7 +5,7 @@ from PyQt5.QtSql import *
 from lib.Utils import _log
 from lib.CustomQueryModel import CustomQueryModel
 from lib.extensions import db
-from models import Items
+from models import Items, Categories
 
 
 class DailyExpensesModel():
@@ -90,22 +90,7 @@ class DailyExpensesModel():
         return currencies
 
     def get_categories(self):
-        categories = []
-        select_categories_query = QSqlQuery(db=self.db)
-        if not select_categories_query.exec_(
-                'SELECT id, name FROM categories ORDER BY id'):
-            _log("Categories selection error[%s]: %s" % (
-                select_categories_query.lastError().type(),
-                select_categories_query.lastError().text()
-            ))
-            return
-        while select_categories_query.next():
-            record = select_categories_query.record()
-            categories.append({
-                'id': record.value('id'),
-                'name': record.value('name')
-            })
-        return categories
+        return self.orm_db.query(Categories).all()
 
     def get_items(self):
         return self.orm_db.query(Items).all()
