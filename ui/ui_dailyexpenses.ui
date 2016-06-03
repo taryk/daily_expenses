@@ -299,19 +299,6 @@
             </property>
            </widget>
           </item>
-          <item row="6" column="4">
-           <widget class="QPushButton" name="btnLocation">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>City, Country</string>
-            </property>
-           </widget>
-          </item>
           <item row="5" column="3">
            <widget class="QDoubleSpinBox" name="spinboxQty">
             <property name="enabled">
@@ -365,6 +352,9 @@
              <bool>true</bool>
             </property>
            </widget>
+          </item>
+          <item row="6" column="4">
+           <widget class="QComboBox" name="cbLocation"/>
           </item>
          </layout>
         </item>

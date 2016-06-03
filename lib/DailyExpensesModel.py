@@ -67,8 +67,11 @@ class DailyExpensesModel():
     def get_locations(self):
         return self.orm_db.query(Locations).all()
 
-    def get_places(self):
-        return self.orm_db.query(Places).all()
+    def get_places(self, location_id=None):
+        query = self.orm_db.query(Places)
+        if location_id:
+            return query.filter_by(location_id=location_id)
+        return query.all()
 
     def get_users(self):
         return self.orm_db.query(Users).all()

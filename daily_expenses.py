@@ -30,8 +30,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.chbCurrentDate.toggled.connect(self.current_date)
         self.chbCurrentTime.toggled.connect(self.current_time)
         self.cbCurrency.currentIndexChanged.connect(self.change_currency)
-        self.cbWhere.currentIndexChanged.connect(self.change_place)
-        self.btnLocation.clicked.connect(self.change_location)
+        self.cbLocation.currentIndexChanged.connect(self.change_location)
 
         # Timer
         self.date_timer = QTimer(self)
@@ -85,11 +84,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 'title': '{name}',
                 'extra_data': ['id'],
             },
+            'locations': {
+                'id_column': 'location_id',
+                'widget': self.cbLocation,
+                'title': '{city}, {country}',
+                'extra_data': ['id']
+            },
             'places': {
                 'id_column': 'place_id',
                 'widget': self.cbWhere,
                 'title': '{name}',
-                'extra_data': ['id', 'location'],
+                'depend_on': ['locations'],
+                'extra_data': ['id'],
             },
             'users': {
                 'id_column': 'user_id',
@@ -116,13 +122,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             + " "
         )
 
-    def change_place(self):
-        self.btnLocation.setText(
-            self.cbWhere.itemData(self.cbWhere.currentIndex())['location']
-        )
-
     def change_location(self):
-        print("click")
+        self.reload('places')
 
     def add_item(self):
         if self.validate():
@@ -244,7 +245,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def _load_things(self, things, details):
         details['widget'].clear()
-        stuff = getattr(self.db_model, 'get_' + things)()
+        args = dict()
+        if 'depend_on' in details:
+            for depend_on in details['depend_on']:
+                id_column = self.data_mapping[depend_on]['id_column']
+                args[id_column] = self.get_current_id_of(depend_on)
+
+        stuff = getattr(self.db_model, 'get_' + things)(**args)
         for thing in stuff:
             title = details['title'].format(**thing.__dict__)
             extra_data = dict(
