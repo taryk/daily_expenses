@@ -246,11 +246,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         details['widget'].clear()
         stuff = getattr(self.db_model, 'get_' + things)()
         for thing in stuff:
-            title = details['title'].format(**thing)
+            title = details['title'].format(**thing.__dict__)
             extra_data = dict(
                 zip(
                     details['extra_data'],
-                    map(lambda x: thing[x], details['extra_data'])
+                    map(lambda field: getattr(thing, field),
+                        details['extra_data'])
                 )
             )
             details['widget'].addItem(title, extra_data)
