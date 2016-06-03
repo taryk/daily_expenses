@@ -7,8 +7,8 @@ CREATE TABLE "currencies" (
     "name" TEXT NOT NULL,
     "sign" TEXT NOT NULL,
     "note" TEXT NULL,
-    "cdate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "mdate" DATETIME NULL
+    "datetime_created" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "datetime_modified" DATETIME NULL
 );
 CREATE UNIQUE INDEX currencies_name ON currencies(name);
 INSERT INTO "currencies" ('id', 'name', 'sign') VALUES(1, 'UAH', '₴');
@@ -21,8 +21,8 @@ CREATE TABLE "categories" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NULL,
-    "cdate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "mdate" DATETIME NULL
+    "datetime_created" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "datetime_modified" DATETIME NULL
 );
 CREATE UNIQUE INDEX categories_name ON categories(name);
 INSERT INTO "categories" ('id', 'name') VALUES(1, 'groceries');
@@ -40,8 +40,8 @@ CREATE TABLE "locations" (
     "city" TEXT NOT NULL,
     "country" TEXT NOT NULL,
     "note" TEXT NULL,
-    "cdate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "mdate" DATETIME NULL
+    "datetime_created" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "datetime_modified" DATETIME NULL
 );
 INSERT INTO "locations" ('id', 'city', 'country') VALUES(1, 'Lviv', 'Ukraine');
 INSERT INTO "locations" ('id', 'city', 'country') VALUES(2, 'Ternopil', 'Ukraine');
@@ -53,8 +53,8 @@ CREATE TABLE "places" (
     "name" TEXT NOT NULL,
     "location_id" INTEGER NOT NULL,
     "note" TEXT NULL,
-    "cdate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "mdate" DATETIME NULL,
+    "datetime_created" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "datetime_modified" DATETIME NULL,
     FOREIGN KEY(location_id) REFERENCES locations(id)
 );
 CREATE UNIQUE INDEX places_name ON places(name);
@@ -66,8 +66,8 @@ CREATE TABLE "users" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "user_name" TEXT NOT NULL,
     "full_name" TEXT NOT NULL,
-    "cdate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "mdate" DATETIME NULL
+    "datetime_created" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "datetime_modified" DATETIME NULL
 );
 CREATE UNIQUE INDEX users_name ON users(user_name);
 INSERT INTO "users" ('id', 'user_name', 'full_name') VALUES(1, 'test', 'Anonymous Joe');
@@ -77,8 +77,8 @@ CREATE TABLE "items" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NULL,
-    "cdate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "mdate" DATETIME NULL
+    "datetime_created" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "datetime_modified" DATETIME NULL
 );
 CREATE UNIQUE INDEX items_names ON items(name);
 
@@ -88,9 +88,8 @@ CREATE TABLE "measures" (
     "name" TEXT NOT NULL,
     "short" TEXT NOT NULL,
     "note" TEXT NULL,
-    "date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "cdate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "mdate" DATETIME NULL
+    "datetime_created" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "datetime_modified" DATETIME NULL
 );
 INSERT INTO "measures" ('id', 'name', 'short', 'note') VALUES(1, 'kilogram', 'kg', 'weight');
 INSERT INTO "measures" ('id', 'name', 'short', 'note') VALUES(2, 'gram',     'g',  'weight');
@@ -109,9 +108,9 @@ CREATE TABLE "balance" (
     "measure_id" INTEGER NOT NULL,
     "is_spending" INTEGER NOT NULL DEFAULT 1,
     "note" TEXT NULL,
-    "date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "cdate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "mdate" DATETIME NULL,
+    "datetime" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "datetime_created" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "datetime_modified" DATETIME NULL,
     FOREIGN KEY(item_id) REFERENCES items(id),
     FOREIGN KEY(category_id) REFERENCES categories(id),
     FOREIGN KEY(currency_id) REFERENCES currencies(id),

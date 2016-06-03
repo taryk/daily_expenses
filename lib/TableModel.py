@@ -31,7 +31,8 @@ class TableModel():
         self.model.setHeaderData(8, Qt.Horizontal, QtGui.qApp.tr("Units"))
         self.model.setHeaderData(9, Qt.Horizontal, QtGui.qApp.tr("is spending"))
         self.model.setHeaderData(10, Qt.Horizontal, QtGui.qApp.tr("Note"))
-        self.model.setHeaderData(11, Qt.Horizontal, QtGui.qApp.tr("Date"))
+        self.model.setHeaderData(11, Qt.Horizontal, QtGui.qApp.tr("Date and "
+                                                                  "Time"))
         self.model.removeColumn(12)
         self.model.removeColumn(13)
 

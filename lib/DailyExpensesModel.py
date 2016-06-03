@@ -38,9 +38,9 @@ class DailyExpensesModel():
                 """
                 INSERT INTO balance (item_id, category_id, cost,
                 currency_id, user_id, place_id, qty, measure_id, is_spending,
-                note, date)
+                note, datetime)
                 VALUES (:item_id, :category_id, :cost, :currency_id, :user_id,
-                :place_id, :qty, :measure_id, :is_spending, :note, :date)
+                :place_id, :qty, :measure_id, :is_spending, :note, :datetime)
                 """)
             for column in data:
                 query_insert.bindValue(':'+column, data[column])

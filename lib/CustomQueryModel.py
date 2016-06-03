@@ -21,11 +21,11 @@ class CustomQueryModel():
                 {'column': ['users', 'full_name'], 'rel': ['user_id', 'id']},
                 {'column': ['places', 'name'], 'rel': ['place_id', 'id']},
                 {'column': ['balance', 'note']},
-                {'column': ['balance', 'date']},
-                {'column': ['balance', 'cdate']},
-                {'column': ['balance', 'mdate']},
+                {'column': ['balance', 'datetime']},
+                {'column': ['balance', 'datetime_created']},
+                {'column': ['balance', 'datetime_modified']},
             ],
-            order=['balance', 'date', 'DESC'],
+            order=['balance', 'datetime', 'DESC'],
         )
         self.model.columns(
             [
@@ -67,8 +67,8 @@ class CustomQueryModel():
                     'edit': ['balance_place_id'],
                 },
                 {
-                    'title': 'Date',
-                    'source': lambda column: column['balance_date'],
+                    'title': 'Date adn Time',
+                    'source': lambda column: column['balance_datetime'],
                     # TODO edit date as well
                     'edit': None,
                 },

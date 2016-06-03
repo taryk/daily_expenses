@@ -21,7 +21,7 @@ class QueryModel():
             LEFT JOIN users u ON b.user_id = u.id
             LEFT JOIN places p ON b.place_id = p.id
             LEFT JOIN measures m ON b.measure_id = m.id
-            ORDER BY b.date DESC
+            ORDER BY b.datetime DESC
             """)
         self.model.setHeaderData(0, Qt.Horizontal, QtGui.qApp.tr("ID"))
         self.model.setHeaderData(1, Qt.Horizontal, QtGui.qApp.tr("Item"))
@@ -30,7 +30,8 @@ class QueryModel():
         self.model.setHeaderData(4, Qt.Horizontal, QtGui.qApp.tr("Category"))
         self.model.setHeaderData(5, Qt.Horizontal, QtGui.qApp.tr("By whom"))
         self.model.setHeaderData(6, Qt.Horizontal, QtGui.qApp.tr("Where"))
-        self.model.setHeaderData(7, Qt.Horizontal, QtGui.qApp.tr("Date"))
+        self.model.setHeaderData(7, Qt.Horizontal, QtGui.qApp.tr("Date and "
+                                                                 "Time"))
 
     def get_model(self):
         return self.model

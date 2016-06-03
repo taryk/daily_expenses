@@ -128,7 +128,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.validate():
             fields = [
                 'item_id',    'category_id', 'user_id',  'cost', 'qty',
-                'measure_id', 'is_spending', 'place_id', 'note', 'date',
+                'measure_id', 'is_spending', 'place_id', 'note', 'datetime',
                 'currency_id'
             ]
             data = dict(zip(fields, map(self.get_value, fields)))
@@ -195,7 +195,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def get_cost(self):
         return self.spinboxMoney.value()
 
-    def get_date(self):
+    def get_datetime(self):
         return(self.dateEdit.date().toString("yyyy.MM.dd") + " " +
                self.timeEdit.time().toString("hh:mm:ss"))
 
