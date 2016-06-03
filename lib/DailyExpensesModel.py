@@ -4,12 +4,14 @@ from PyQt5 import QtGui
 from PyQt5.QtSql import *
 from lib.Utils import _log
 from lib.CustomQueryModel import CustomQueryModel
+from lib.extensions import db
 
 
 class DailyExpensesModel():
 
     def __init__(self, parent=None):
         self.db = self.db_connect()
+        self.orm_db = db
 
     def db_connect(self):
         db = QSqlDatabase.addDatabase("QSQLITE")
