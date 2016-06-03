@@ -75,12 +75,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'categories': {
                 'widget': self.cbCategory,
                 'title': '{name}',
-                'extra_data': 'id',
+                'extra_data': ['id'],
             },
             'items': {
                 'widget': self.cbItem,
                 'title': '{name}',
-                'extra_data': 'id',
+                'extra_data': ['id'],
             },
             'places': {
                 'widget': self.cbWhere,
@@ -90,7 +90,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'users': {
                 'widget': self.cbByWhom,
                 'title': '{full_name}',
-                'extra_data': 'id',
+                'extra_data': ['id'],
             },
             'measures': {
                 'widget': self.cbUnits,
@@ -148,7 +148,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def get_item_id(self):
         item_index = self.cbItem.findText(self.cbItem.currentText())
         if item_index >= 0:
-            return self.cbItem.itemData(item_index)
+            return self.cbItem.itemData(item_index)['id']
 
         if not self.msg_confirmation("Cannot find such item in DB.",
                                      "Would you like to add this one?"):
@@ -163,22 +163,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return None
 
     def get_category_id(self):
-        return self.cbCategory.itemData(self.cbCategory.currentIndex())
+        return self.cbCategory.itemData(self.cbCategory.currentIndex())['id']
 
     def get_currency_id(self):
         return self.cbCurrency.itemData(self.cbCurrency.currentIndex())['id']
 
     def get_user_id(self):
-        return self.cbByWhom.itemData(self.cbByWhom.currentIndex())
+        return self.cbByWhom.itemData(self.cbByWhom.currentIndex())['id']
 
     def get_place_id(self):
         return self.cbWhere.itemData(self.cbWhere.currentIndex())['id']
 
+    def get_measure_id(self):
+        return self.cbUnits.itemData(self.cbUnits.currentIndex())['id']
+
     def get_qty(self):
         return self.spinboxQty.value()
-
-    def get_measure_id(self):
-        return self.cbUnits.itemData(self.cbUnits.currentIndex())
 
     def get_is_spending(self):
         return self.rbExpense.isChecked() and 1 or 0
