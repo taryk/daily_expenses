@@ -68,31 +68,37 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.load_data({
             'currencies': {
+                'id_column': 'currency_id',
                 'widget': self.cbCurrency,
                 'title': '{name}',
                 'extra_data': ['id', 'sign'],
             },
             'categories': {
+                'id_column': 'category_id',
                 'widget': self.cbCategory,
                 'title': '{name}',
                 'extra_data': ['id'],
             },
             'items': {
+                'id_column': 'item_id',
                 'widget': self.cbItem,
                 'title': '{name}',
                 'extra_data': ['id'],
             },
             'places': {
+                'id_column': 'place_id',
                 'widget': self.cbWhere,
                 'title': '{name}',
                 'extra_data': ['id', 'location'],
             },
             'users': {
+                'id_column': 'user_id',
                 'widget': self.cbByWhom,
                 'title': '{full_name}',
                 'extra_data': ['id'],
             },
             'measures': {
+                'id_column': 'measure_id',
                 'widget': self.cbUnits,
                 'title': '{name} ({short})',
                 'extra_data': ['id'],
@@ -125,17 +131,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 'measure_id', 'is_spending', 'place_id', 'note', 'date',
                 'currency_id'
             ]
-            data = dict(
-                zip(
-                    fields,
-                    map(lambda what: getattr(self, 'get_' + what)(), fields)
-                )
-            )
+            data = dict(zip(fields, map(self.get_value, fields)))
+
             self.db_model.insert(data)
             self.clear_fields()
             self.model.load_data()
         else:
             _log('failed to add')
+
+    def get_value(self, what):
+        get_value_method = 'get_' + what
+        if hasattr(self, get_value_method):
+            return getattr(self, get_value_method)()
+        else:
+            things = next(things for things in self.data_mapping.keys()
+                          if self.data_mapping[things]['id_column'] == what)
+            if things:
+                return self.get_current_id_of(things)
+            else:
+                raise Exception('Unknown id_column "{:s}"'.format(what))
 
     def msg_confirmation(self, text, info):
         msg_box = QMessageBox()
@@ -144,6 +158,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         msg_box.setStandardButtons(QMessageBox.Save | QMessageBox.Discard)
         msg_box.setDefaultButton(QMessageBox.Save)
         return msg_box.exec_() == QMessageBox.Save
+
+    def get_current_id_of(self, things):
+        widget = self.data_mapping[things]['widget']
+        if widget:
+            return widget.itemData(widget.currentIndex())['id']
+        else:
+            raise Exception("Unknown {:s}".format(things))
 
     def get_item_id(self):
         item_index = self.cbItem.findText(self.cbItem.currentText())
@@ -161,21 +182,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return item_id
         else:
             return None
-
-    def get_category_id(self):
-        return self.cbCategory.itemData(self.cbCategory.currentIndex())['id']
-
-    def get_currency_id(self):
-        return self.cbCurrency.itemData(self.cbCurrency.currentIndex())['id']
-
-    def get_user_id(self):
-        return self.cbByWhom.itemData(self.cbByWhom.currentIndex())['id']
-
-    def get_place_id(self):
-        return self.cbWhere.itemData(self.cbWhere.currentIndex())['id']
-
-    def get_measure_id(self):
-        return self.cbUnits.itemData(self.cbUnits.currentIndex())['id']
 
     def get_qty(self):
         return self.spinboxQty.value()
