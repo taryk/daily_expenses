@@ -5,6 +5,7 @@ from PyQt5.QtSql import *
 from lib.Utils import _log
 from lib.CustomQueryModel import CustomQueryModel
 from lib.extensions import db
+from models import Items
 
 
 class DailyExpensesModel():
@@ -58,36 +59,15 @@ class DailyExpensesModel():
             return
         self.db.commit()
 
-    def get_item_id(self, name=None):
-        select_item_query = QSqlQuery(db=self.db)
-        select_item_query.prepare(
-            'SELECT id FROM items WHERE name = :name LIMIT 1'
-        )
-        select_item_query.bindValue(':name', name)
-        if not select_item_query.exec_():
-            _log("Can't select item. Error[%s]: %s" % (
-                select_item_query.lastError().type(),
-                select_item_query.lastError().text()
-            ))
-            _log("bound values: %s" % str(select_item_query.boundValues()))
-            return None
-        if select_item_query.first():
-            item_id = select_item_query.record().value('id')
-            return item_id
-        return None
-
-    def insert_item(self, name=None):
-        insert_item_query = QSqlQuery(db=self.db)
-        insert_item_query.prepare('INSERT INTO items (name) VALUES (:name)')
-        insert_item_query.bindValue(':name', name)
-        if not insert_item_query.exec_():
-            _log("Can't add item. Error[%s]: %s" % (
-                insert_item_query.lastError().type(),
-                insert_item_query.lastError().text()
-            ))
-            _log("bound values: %s" % str(insert_item_query.boundValues()))
-            return None
-        self.db.commit()
+    def insert_item(self, name):
+        try:
+            new_item = Items(name=name)
+            self.orm_db.add(new_item)
+            self.orm_db.commit()
+            return new_item.id
+        except Exception as e:
+            _log(e)
+            return
 
     # TODO follow DRY
     def get_currencies(self):
@@ -128,22 +108,7 @@ class DailyExpensesModel():
         return categories
 
     def get_items(self):
-        items = []
-        select_items_query = QSqlQuery(db=self.db)
-        if not select_items_query.exec_(
-                'SELECT id, name FROM items ORDER BY id'):
-            _log("Items selection error[%s]: %s" % (
-                select_items_query.lastError().type(),
-                select_items_query.lastError().text()
-            ))
-            return
-        while select_items_query.next():
-            record = select_items_query.record()
-            items.append({
-                'id': record.value('id'),
-                'name': record.value('name'),
-            })
-        return items
+        return self.orm_db.query(Items).all()
 
     def get_places(self):
         places = []

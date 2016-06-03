@@ -173,8 +173,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                      "Would you like to add this one?"):
             raise Exception("don't save anything")
 
-        self.db_model.insert_item(name=self.cbItem.currentText())
-        item_id = self.db_model.get_item_id(name=self.cbItem.currentText())
+        item_id = self.db_model.insert_item(name=self.cbItem.currentText())
         if item_id:
             self.reload("items")
             return item_id
