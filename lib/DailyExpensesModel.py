@@ -5,7 +5,8 @@ from PyQt5.QtSql import *
 from lib.Utils import _log
 from lib.CustomQueryModel import CustomQueryModel
 from lib.extensions import db
-from models import Items, Categories, Currencies, Locations, Places, Users
+from models import Items, Categories, Currencies, Locations, Places, Users, \
+    Measures
 
 
 class DailyExpensesModel():
@@ -88,19 +89,4 @@ class DailyExpensesModel():
         return self.orm_db.query(Users).all()
 
     def get_measures(self):
-        measures = []
-        select_measures_query = QSqlQuery(db=self.db)
-        if not select_measures_query.exec_(
-                'SELECT id, name, short FROM measures ORDER BY id'):
-            _log("Measures selection error[%s]: %s" % (
-                select_measures_query.lastError().type(),
-                select_measures_query.lastError().text()
-            ))
-        while select_measures_query.next():
-            record = select_measures_query.record()
-            measures.append({
-                'id': record.value('id'),
-                'name': record.value('name'),
-                'short': record.value('short'),
-            })
-        return measures
+        return self.orm_db.query(Measures).all()
