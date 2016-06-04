@@ -1,76 +1,71 @@
 # -*- coding: utf-8 -*-
 
-from lib.QSqlCustomQueryModel import QSqlCustomQueryModel
+from lib.SQLAlchemyTableModel import SQLAlchemyTableModel
 
 
-class CustomQueryModel():
+class CustomQueryModel:
 
     def __init__(self, db):
-        self.model = QSqlCustomQueryModel(db=db)
-        self.model.describeTable(
-            table='balance',
-            select=[
-                {'column': ['balance', 'id']},
-                {'column': ['items', 'name'], 'rel': ['item_id', 'id']},
-                {'column': ['balance', 'is_spending']},
-                {'column': ['balance', 'cost']},
-                {'column': ['balance', 'qty']},
-                {'column': ['measures', 'short'], 'rel': ['measure_id', 'id']},
-                {'column': ['categories', 'name'], 'rel': ['category_id', 'id']},
-                {'column': ['currencies', 'sign'], 'rel': ['currency_id', 'id']},
-                {'column': ['users', 'full_name'], 'rel': ['user_id', 'id']},
-                {'column': ['places', 'name'], 'rel': ['place_id', 'id']},
-                {'column': ['balance', 'note']},
-                {'column': ['balance', 'datetime']},
-                {'column': ['balance', 'datetime_created']},
-                {'column': ['balance', 'datetime_modified']},
-            ],
-            order=['balance', 'datetime', 'DESC'],
-        )
-        self.model.columns(
+        self.model = SQLAlchemyTableModel(db=db)
+        self.model.load_data()
+        self.model.describe_columns(
             [
                 {
                     'title': 'Item',
-                    'source': lambda column: column['items_name'],
-                    'edit': ['balance_item_id'],
+                    'source': lambda balance: balance.item.name,
+                    'edit': lambda balance: balance.item_id,
+                    'set': lambda balance, value: setattr(balance, 'item_id',
+                                                          value),
                 },
                 {
                     'title': 'Cost',
-                    'source': lambda column: "%s %.2f" % (
-                        column['currencies_sign'],
-                        (column['balance_cost'] * column['balance_is_spending'])
+                    'source': lambda balance: '{:s} {:.2f}'.format(
+                        balance.currency.sign,
+                        balance.cost * balance.is_spending
                     ),
                     # TODO edit currency as well
-                    'edit': ['balance_cost'],
+                    'edit': lambda balance: balance.cost,
+                    'set': lambda balance, value: setattr(balance, 'cost',
+                                                          value),
                 },
                 {
                     'title': 'Qty/Amount',
-                    'source': lambda column: "%.2f %s" % (
-                        column['balance_qty'], column['measures_short'],
+                    'source': lambda balance: "{:.2f} {:s}".format(
+                        balance.qty, balance.measure.short,
                     ),
                     # TODO edit measure as well
-                    'edit': ['balance_qty'],
+                    'edit': lambda balance: balance.qty,
+                    'set': lambda balance, value: setattr(balance, 'qty',
+                                                          value),
                 },
                 {
                     'title': 'Category',
-                    'source': lambda column: column['categories_name'],
-                    'edit': ['balance_category_id'],
+                    'source': lambda balance: balance.category.name,
+                    'edit': lambda balance: balance.category_id,
+                    'set': lambda balance, value: setattr(balance,
+                                                          'category_id',
+                                                          value),
                 },
                 {
                     'title': 'By whom',
-                    'source': lambda column: column['users_full_name'],
-                    'edit': ['balance_user_id'],
+                    'source': lambda balance: balance.user.full_name,
+                    'edit': lambda balance: balance.user_id,
+                    'set': lambda balance, value: setattr(balance, 'user_id',
+                                                          value),
                 },
                 {
                     'title': 'Where',
-                    'source': lambda column: column['places_name'],
-                    'edit': ['balance_place_id'],
+                    'source': lambda balance: balance.place.name,
+                    'edit': lambda balance: balance.place_id,
+                    'set': lambda balance, value: setattr(balance, 'place_id',
+                                                          value),
                 },
                 {
-                    'title': 'Date adn Time',
-                    'source': lambda column: column['balance_datetime'],
+                    'title': 'Date and Time',
+                    'source': lambda balance: balance.datetime.isoformat(' '),
                     # TODO edit date as well
                     'edit': None,
+                    'set': None,
                 },
             ]
         )
