@@ -8,8 +8,9 @@ from datetime import datetime
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5.QtCore import QDate, QTime, QTimer, pyqtSignal, Qt
 
-from lib.ComboBoxDelegate import ComboBoxDelegate
 from lib.DailyExpensesModel import DailyExpensesModel
+from lib.delegators import ItemDelegator, CategoryDelegator, UserDelegator, \
+    PlaceDelegator
 from lib.Utils import _log
 from ui.ui_dailyexpenses import Ui_MainWindow
 
@@ -47,19 +48,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.model = self.db_model.get_model()
         self.set_column_delegators({
-            self.COL_ITEMS: ComboBoxDelegate(
-               self.tableView, db=self.db_model.db, table='items'
-            ),
-            self.COL_CATEGORIES: ComboBoxDelegate(
-                self.tableView, db=self.db_model.db, table='categories'
-            ),
-            self.COL_USERS: ComboBoxDelegate(
-                self.tableView,
-                db=self.db_model.db, table='users', data_column='full_name'
-            ),
-            self.COL_PLACES: ComboBoxDelegate(
-                self.tableView, db=self.db_model.db, table='places'
-            ),
+            self.COL_ITEMS: ItemDelegator(self.tableView,
+                                          db_model=self.db_model),
+            self.COL_CATEGORIES: CategoryDelegator(self.tableView,
+                                                   db_model=self.db_model),
+            self.COL_USERS: UserDelegator(self.tableView,
+                                          db_model=self.db_model),
+            self.COL_PLACES: PlaceDelegator(self.tableView,
+                                            db_model=self.db_model),
         })
 
         self.tableView.setModel(self.model)

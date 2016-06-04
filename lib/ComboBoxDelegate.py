@@ -2,37 +2,23 @@
 
 from PyQt5.QtWidgets import QItemDelegate, QComboBox
 from PyQt5.QtCore import Qt
-from PyQt5.QtSql import QSqlQuery
 from lib.Utils import _log
 
 
 class ComboBoxDelegate(QItemDelegate):
 
-    def __init__(self, parent=None, db=None, table=None, id_column='id',
-                 data_column='name'):
+    def __init__(self, parent=None, db_model=None, db_class=None,
+                 show_field=None):
         super(ComboBoxDelegate, self).__init__(parent)
-        self.db = db
-        self.table = table
-        self.id_column = id_column
-        self.data_column = data_column
+        self.db_model = db_model
+        self.db_class = db_class
+        self.show_field = show_field
 
     def createEditor(self, parent, option, index):
         cb_categories = QComboBox(parent)
-        select_query = QSqlQuery(db=self.db)
-        query = 'SELECT %s, %s FROM %s ORDER BY %s' % (
-            self.id_column, self.data_column, self.table, self.id_column
-        )
-        if not select_query.exec_(query):
-            _log("Selection error[%s]: %s" % (
-                select_query.lastError().type(),
-                select_query.lastError().text()
-            ))
-        while select_query.next():
-            record = select_query.record()
-            cb_categories.addItem(
-                record.value(self.data_column),
-                record.value(self.id_column)
-            )
+        method_name = 'get_' + self.db_class.__tablename__
+        for thing in getattr(self.db_model, method_name)():
+            cb_categories.addItem(getattr(thing, self.show_field), thing.id)
         return cb_categories
 
     def setEditorData(self, editor, index):
@@ -43,14 +29,9 @@ class ComboBoxDelegate(QItemDelegate):
 
     def setModelData(self, editor, model, index):
         data = {
-            self.table + '_' + self.id_column: editor.itemData(
-                editor.currentIndex()
-            ),
-            self.table + '_' + self.data_column: editor.itemText(
-                editor.currentIndex()
-            ),
+            'text': editor.itemText(editor.currentIndex()),
+            'extra_data': editor.itemData(editor.currentIndex()),
         }
-        _log("set data %s" % data)
         model.setData(index, data, Qt.EditRole)
 
     def _commitAndCloseEditor(self):
