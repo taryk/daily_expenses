@@ -46,7 +46,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # DB
         self.db_model = DailyExpensesModel()
 
-        self.model = self.db_model.get_model()
+        self.table_view_model = self.db_model.get_table_view_model()
         self.set_column_delegators({
             self.COL_ITEMS: ItemDelegator(self.tableView,
                                           db_model=self.db_model),
@@ -58,7 +58,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             db_model=self.db_model),
         })
 
-        self.tableView.setModel(self.model)
+        self.tableView.setModel(self.table_view_model)
         self.tableView.show()
 
         self.load_data({
@@ -132,7 +132,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             self.db_model.insert(data)
             self.clear_fields()
-            self.model.load_data()
+            self.table_view_model.load_data()
         else:
             _log('failed to add')
 
