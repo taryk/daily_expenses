@@ -2,8 +2,8 @@
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import QAbstractTableModel
-from sqlalchemy import desc
 from models import Balance
+
 
 class SQLAlchemyTableModel(QAbstractTableModel):
 
@@ -19,8 +19,7 @@ class SQLAlchemyTableModel(QAbstractTableModel):
             self.setHeaderData(0, QtCore.Qt.Horizontal, column['title'])
 
     def load_data(self):
-        self.table_data = self.db.query(Balance).order_by(
-            desc(Balance.datetime)).all()
+        self.table_data = Balance.all()
 
     def rowCount(self, _parent=QtCore.QModelIndex()):
         # return self.select_query.result().size()

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, \
     UniqueConstraint, func
-from lib.extensions import Base
+from lib.extensions import Base, db
 
 
 class Locations(Base):
@@ -23,3 +23,7 @@ class Locations(Base):
         return "<Locations(city='{:s}', country='{:s}', " \
                "datetime_created='{:s}')>" \
             .format(self.city, self.country, self.datetime_created)
+
+    @classmethod
+    def all(cls):
+        return db.query(cls).all()

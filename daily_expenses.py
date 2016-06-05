@@ -11,6 +11,8 @@ from PyQt5.QtCore import QDate, QTime, QTimer, pyqtSignal, Qt
 from lib.DailyExpensesModel import DailyExpensesModel
 from lib.delegators import ItemDelegator, CategoryDelegator, UserDelegator, \
     PlaceDelegator
+from models import Balance, Items, Categories, Currencies, Places, \
+    Locations, Measures, Users
 from lib.Utils import _log
 from ui.ui_dailyexpenses import Ui_MainWindow
 
@@ -48,14 +50,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.table_view_model = self.db_model.get_table_view_model()
         self.set_column_delegators({
-            self.COL_ITEMS: ItemDelegator(self.tableView,
-                                          db_model=self.db_model),
-            self.COL_CATEGORIES: CategoryDelegator(self.tableView,
-                                                   db_model=self.db_model),
-            self.COL_USERS: UserDelegator(self.tableView,
-                                          db_model=self.db_model),
-            self.COL_PLACES: PlaceDelegator(self.tableView,
-                                            db_model=self.db_model),
+            self.COL_ITEMS: ItemDelegator(self.tableView),
+            self.COL_CATEGORIES: CategoryDelegator(self.tableView),
+            self.COL_USERS: UserDelegator(self.tableView),
+            self.COL_PLACES: PlaceDelegator(self.tableView),
         })
 
         self.tableView.setModel(self.table_view_model)
@@ -63,30 +61,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.load_data({
             'currencies': {
+                'class': Currencies,
                 'id_column': 'currency_id',
                 'widget': self.cbCurrency,
                 'title': '{name}',
                 'extra_data': ['id', 'sign'],
             },
             'categories': {
+                'class': Categories,
                 'id_column': 'category_id',
                 'widget': self.cbCategory,
                 'title': '{name}',
                 'extra_data': ['id'],
             },
             'items': {
+                'class': Items,
                 'id_column': 'item_id',
                 'widget': self.cbItem,
                 'title': '{name}',
                 'extra_data': ['id'],
             },
             'locations': {
+                'class': Locations,
                 'id_column': 'location_id',
                 'widget': self.cbLocation,
                 'title': '{city}, {country}',
                 'extra_data': ['id']
             },
             'places': {
+                'class': Places,
                 'id_column': 'place_id',
                 'widget': self.cbWhere,
                 'title': '{name}',
@@ -94,12 +97,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 'extra_data': ['id'],
             },
             'users': {
+                'class': Users,
                 'id_column': 'user_id',
                 'widget': self.cbByWhom,
                 'title': '{full_name}',
                 'extra_data': ['id'],
             },
             'measures': {
+                'class': Measures,
                 'id_column': 'measure_id',
                 'widget': self.cbUnits,
                 'title': '{name} ({short})',
@@ -236,10 +241,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def load_data(self, data_mapping):
         self.data_mapping = data_mapping
-        for things, details in self.data_mapping.items():
-            self._load_things(things, details)
+        for details in self.data_mapping.values():
+            self._load_things(details)
 
-    def _load_things(self, things, details):
+    def _load_things(self, details):
         details['widget'].clear()
         args = dict()
         if 'depend_on' in details:
@@ -247,7 +252,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 id_column = self.data_mapping[depend_on]['id_column']
                 args[id_column] = self.get_current_id_of(depend_on)
 
-        stuff = getattr(self.db_model, 'get_' + things)(**args)
+        stuff = details['class'].all(**args)
         for thing in stuff:
             title = details['title'].format(**thing.__dict__)
             extra_data = dict(
@@ -260,7 +265,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             details['widget'].addItem(title, extra_data)
 
     def reload(self, things):
-        self._load_things(things, self.data_mapping[things])
+        self._load_things(self.data_mapping[things])
 
     def clear_fields(self):
         self.spinboxMoney.setValue(0.0)

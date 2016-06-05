@@ -7,17 +7,14 @@ from lib.Utils import _log
 
 class ComboBoxDelegate(QItemDelegate):
 
-    def __init__(self, parent=None, db_model=None, db_class=None,
-                 show_field=None):
+    def __init__(self, parent=None, model_class=None, show_field=None):
         super(ComboBoxDelegate, self).__init__(parent)
-        self.db_model = db_model
-        self.db_class = db_class
+        self.model_class = model_class
         self.show_field = show_field
 
     def createEditor(self, parent, option, index):
         cb_categories = QComboBox(parent)
-        method_name = 'get_' + self.db_class.__tablename__
-        for thing in getattr(self.db_model, method_name)():
+        for thing in self.model_class.all():
             cb_categories.addItem(getattr(thing, self.show_field), thing.id)
         return cb_categories
 

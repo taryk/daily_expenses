@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, func
-from lib.extensions import Base
+from lib.extensions import Base, db
 
 
 class Items(Base):
@@ -17,3 +17,7 @@ class Items(Base):
         return "<Items(name='{:s}', description='{:s}', " \
                "datetime_created='{:s}')>" \
             .format(self.name, self.description, self.datetime_created)
+
+    @classmethod
+    def all(cls):
+        return db.query(cls).all()

@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, Column, Integer, String, Text, DateTime, \
     UniqueConstraint, func
 from sqlalchemy.orm import relationship
-from lib.extensions import Base
+from lib.extensions import Base, db
 
 
 class Places(Base):
@@ -25,3 +25,10 @@ class Places(Base):
         return "<Places(name='{:s}', location_name='{:s}', " \
                "datetime_created='{:s}')>" \
             .format(self.name, self.location.name, self.datetime_created)
+
+    @classmethod
+    def all(cls, location_id=None):
+        query = db.query(cls)
+        if location_id:
+            return query.filter_by(location_id=location_id)
+        return query.all()

@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, func
-from lib.extensions import Base
+from lib.extensions import Base, db
 
 
 class Users(Base):
@@ -17,3 +17,7 @@ class Users(Base):
         return "<Users(user_name='{:s}', full_name='{:s}', " \
                "datetime_created='{:s}')>" \
             .format(self.user_name, self.full_name, self.datetime_created)
+
+    @classmethod
+    def all(cls):
+        return db.query(cls).all()

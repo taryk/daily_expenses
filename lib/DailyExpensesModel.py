@@ -3,8 +3,7 @@
 from lib.Utils import _log
 from lib.CustomQueryModel import CustomQueryModel
 from lib.extensions import db
-from models import Items, Categories, Currencies, Locations, Places, Users, \
-    Measures, Balance
+from models import Items, Balance
 
 
 class DailyExpensesModel():
@@ -34,27 +33,3 @@ class DailyExpensesModel():
         except Exception as e:
             _log(e)
             return
-
-    def get_categories(self):
-        return self.db.query(Categories).all()
-
-    def get_items(self):
-        return self.db.query(Items).all()
-
-    def get_currencies(self):
-        return self.db.query(Currencies).all()
-
-    def get_locations(self):
-        return self.db.query(Locations).all()
-
-    def get_places(self, location_id=None):
-        query = self.db.query(Places)
-        if location_id:
-            return query.filter_by(location_id=location_id)
-        return query.all()
-
-    def get_users(self):
-        return self.db.query(Users).all()
-
-    def get_measures(self):
-        return self.db.query(Measures).all()

@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, Column, Integer, Float, SmallInteger, \
-    Text, DateTime, func
+    Text, DateTime, func, desc
 from sqlalchemy.orm import relationship
-from lib.extensions import Base
+from lib.extensions import Base, db
 
 
 class Balance(Base):
@@ -36,3 +36,7 @@ class Balance(Base):
                "datetime='{:s}')>" \
             .format(self.item.name, self.cost, self.currency.name,
                     self.datetime_created)
+
+    @classmethod
+    def all(cls):
+        return db.query(cls).order_by(desc(cls.datetime)).all()

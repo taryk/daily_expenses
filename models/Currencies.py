@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, func
-from lib.extensions import Base
+from lib.extensions import Base, db
 
 
 class Currencies(Base):
@@ -17,3 +17,7 @@ class Currencies(Base):
     def __repr__(self):
         return "<Currencies(name='{:s}', sign='{:s}', datetime_created='{" \
                ":s}')>".format(self.name, self.sign, self.datetime_created)
+
+    @classmethod
+    def all(cls):
+        return db.query(cls).all()
