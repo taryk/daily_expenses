@@ -59,58 +59,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableView.setModel(self.table_view_model)
         self.tableView.show()
 
-        self.load_data({
-            'currencies': {
-                'class': Currencies,
-                'id_column': 'currency_id',
-                'widget': self.cbCurrency,
-                'title': '{name}',
-                'extra_data': ['id', 'sign'],
-            },
-            'categories': {
-                'class': Categories,
-                'id_column': 'category_id',
-                'widget': self.cbCategory,
-                'title': '{name}',
-                'extra_data': ['id'],
-            },
-            'items': {
-                'class': Items,
-                'id_column': 'item_id',
-                'widget': self.cbItem,
-                'title': '{name}',
-                'extra_data': ['id'],
-            },
-            'locations': {
-                'class': Locations,
-                'id_column': 'location_id',
-                'widget': self.cbLocation,
-                'title': '{city}, {country}',
-                'extra_data': ['id']
-            },
-            'places': {
-                'class': Places,
-                'id_column': 'place_id',
-                'widget': self.cbWhere,
-                'title': '{name}',
-                'depend_on': ['locations'],
-                'extra_data': ['id'],
-            },
-            'users': {
-                'class': Users,
-                'id_column': 'user_id',
-                'widget': self.cbByWhom,
-                'title': '{full_name}',
-                'extra_data': ['id'],
-            },
-            'measures': {
-                'class': Measures,
-                'id_column': 'measure_id',
-                'widget': self.cbUnits,
-                'title': '{name} ({short})',
-                'extra_data': ['id'],
-            }
-        })
+        self.load_data(
+            [Currencies, self.cbCurrency],
+            [Categories, self.cbCategory],
+            [Items,      self.cbItem],
+            [Locations,  self.cbLocation],
+            [Places,     self.cbWhere],
+            [Users,      self.cbByWhom],
+            [Measures,   self.cbUnits],
+        )
         self.clear_fields()
 
     def set_column_delegators(self, widgets):
@@ -124,7 +81,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
 
     def change_location(self):
-        self.reload('places')
+        self.reload(Places)
 
     def add_item(self):
         if self.validate():
@@ -146,10 +103,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if hasattr(self, get_value_method):
             return getattr(self, get_value_method)()
         else:
-            things = next(things for things in self.data_mapping.keys()
-                          if self.data_mapping[things]['id_column'] == what)
-            if things:
-                return self.get_current_id_of(things)
+            model_class = next(
+                model_class for model_class in self.data_mapping.keys()
+                if model_class.__singular__ + '_id' == what
+            )
+            if model_class:
+                return self.get_current_id_of(model_class)
             else:
                 raise Exception('Unknown id_column "{:s}"'.format(what))
 
@@ -161,12 +120,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         msg_box.setDefaultButton(QMessageBox.Save)
         return msg_box.exec_() == QMessageBox.Save
 
-    def get_current_id_of(self, things):
-        widget = self.data_mapping[things]['widget']
+    def get_current_id_of(self, model_class):
+        widget = self.data_mapping[model_class]
         if widget:
             return widget.itemData(widget.currentIndex())['id']
         else:
-            raise Exception("Unknown {:s}".format(things))
+            raise Exception("Unknown {:s}".format(model_class))
 
     def get_item_id(self):
         item_index = self.cbItem.findText(self.cbItem.currentText())
@@ -179,7 +138,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         item_id = self.db_model.insert_item(name=self.cbItem.currentText())
         if item_id:
-            self.reload("items")
+            self.reload(Items)
             return item_id
         else:
             return None
@@ -239,33 +198,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return False
         return True
 
-    def load_data(self, data_mapping):
-        self.data_mapping = data_mapping
-        for details in self.data_mapping.values():
-            self._load_things(details)
+    def load_data(self, *data_mapping):
+        for details in data_mapping:
+            self.data_mapping[details[0]] = details[1]
+        for details in data_mapping:
+            self._load_things(*details)
 
-    def _load_things(self, details):
-        details['widget'].clear()
+    def _load_things(self, model_class, widget):
+        widget.clear()
         args = dict()
-        if 'depend_on' in details:
-            for depend_on in details['depend_on']:
-                id_column = self.data_mapping[depend_on]['id_column']
-                args[id_column] = self.get_current_id_of(depend_on)
+        for depend_on in model_class.__depend_on__:
+            id_column = depend_on.__singular__ + '_id'
+            args[id_column] = self.get_current_id_of(depend_on)
 
-        stuff = details['class'].all(**args)
+        stuff = model_class.all(**args)
         for thing in stuff:
-            title = details['title'].format(**thing.__dict__)
-            extra_data = dict(
-                zip(
-                    details['extra_data'],
-                    map(lambda field: getattr(thing, field),
-                        details['extra_data'])
-                )
-            )
-            details['widget'].addItem(title, extra_data)
+            widget.addItem(thing.title(), thing.extra_data())
 
     def reload(self, things):
-        self._load_things(self.data_mapping[things])
+        self._load_things(things, self.data_mapping[things])
 
     def clear_fields(self):
         self.spinboxMoney.setValue(0.0)

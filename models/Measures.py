@@ -3,6 +3,7 @@ from lib.extensions import Base
 
 
 class Measures(Base):
+    __singular__ = 'measure'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), unique=True, nullable=False)
@@ -12,6 +13,9 @@ class Measures(Base):
                               nullable=False)
     datetime_modified = Column(DateTime, onupdate=func.current_timestamp(),
                                nullable=True)
+
+    def title(self):
+        return '{:s} ({:s})'.format(self.name, self.short)
 
     def __repr__(self):
         return "<Measures(name='{:s}', short='{:s}', " \

@@ -5,6 +5,7 @@ from lib.extensions import Base
 
 
 class Balance(Base):
+    __singular__ = 'balance'
 
     id = Column(Integer, primary_key=True)
     item_id = Column(Integer, ForeignKey('items.id'), nullable=False)

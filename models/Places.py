@@ -2,9 +2,11 @@ from sqlalchemy import ForeignKey, Column, Integer, String, Text, DateTime, \
     UniqueConstraint, func
 from sqlalchemy.orm import relationship
 from lib.extensions import Base, db
+from models import Locations
 
 
 class Places(Base):
+    __singular__ = 'place'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
@@ -19,6 +21,10 @@ class Places(Base):
     __table_args__ = (
         UniqueConstraint('name', 'location_id', name='name_location_id_uc'),
     )
+    __depend_on__ = (Locations,)
+
+    def title(self):
+        return self.name
 
     def __repr__(self):
         return "<Places(name='{:s}', location_name='{:s}', " \

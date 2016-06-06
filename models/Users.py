@@ -3,6 +3,7 @@ from lib.extensions import Base
 
 
 class Users(Base):
+    __singular__ = 'user'
 
     id = Column(Integer, primary_key=True)
     user_name = Column(String(100), unique=True, nullable=False)
@@ -11,6 +12,9 @@ class Users(Base):
                               nullable=False)
     datetime_modified = Column(DateTime, onupdate=func.current_timestamp(),
                                nullable=True)
+
+    def title(self):
+        return self.full_name
 
     def __repr__(self):
         return "<Users(user_name='{:s}', full_name='{:s}', " \

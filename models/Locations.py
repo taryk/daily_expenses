@@ -4,6 +4,7 @@ from lib.extensions import Base
 
 
 class Locations(Base):
+    __singular__ = 'location'
 
     id = Column(Integer, primary_key=True)
     city = Column(String(100), nullable=False)
@@ -17,6 +18,9 @@ class Locations(Base):
     __table_args__ = (
         UniqueConstraint('city', 'country', name='city_country_uc'),
     )
+
+    def title(self):
+        return self.city + ' ' + self.country
 
     def __repr__(self):
         return "<Locations(city='{:s}', country='{:s}', " \

@@ -3,6 +3,7 @@ from lib.extensions import Base
 
 
 class Categories(Base):
+    __singular__ = 'category'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), unique=True, nullable=False)
@@ -11,6 +12,9 @@ class Categories(Base):
                               nullable=False)
     datetime_modified = Column(DateTime, onupdate=func.current_timestamp(),
                                nullable=True)
+
+    def title(self):
+        return self.name
 
     def __repr__(self):
         return "<Categories(name='{:s}', description='{:s}', " \

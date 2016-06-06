@@ -3,6 +3,7 @@ from lib.extensions import Base
 
 
 class Items(Base):
+    __singular__ = 'item'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), unique=True, nullable=False)
@@ -11,6 +12,9 @@ class Items(Base):
                               nullable=False)
     datetime_modified = Column(DateTime, onupdate=func.current_timestamp(),
                                nullable=True)
+
+    def title(self):
+        return self.name
 
     def __repr__(self):
         return "<Items(name='{:s}', description='{:s}', " \
