@@ -1,9 +1,8 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, func
-from lib.extensions import Base, db
+from lib.extensions import Base
 
 
 class Items(Base):
-    __tablename__ = 'items'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), unique=True, nullable=False)
@@ -17,7 +16,3 @@ class Items(Base):
         return "<Items(name='{:s}', description='{:s}', " \
                "datetime_created='{:s}')>" \
             .format(self.name, self.description, self.datetime_created)
-
-    @classmethod
-    def all(cls):
-        return db.query(cls).all()

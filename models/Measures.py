@@ -1,9 +1,8 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, func
-from lib.extensions import Base, db
+from lib.extensions import Base
 
 
 class Measures(Base):
-    __tablename__ = 'measures'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), unique=True, nullable=False)
@@ -18,7 +17,3 @@ class Measures(Base):
         return "<Measures(name='{:s}', short='{:s}', " \
                "datetime_created='{:s}')>"\
             .format(self.name, self.short, self.datetime_created)
-
-    @classmethod
-    def all(cls):
-        return db.query(cls).all()

@@ -1,11 +1,10 @@
 from sqlalchemy import ForeignKey, Column, Integer, Float, SmallInteger, \
     Text, DateTime, func, desc
 from sqlalchemy.orm import relationship
-from lib.extensions import Base, db
+from lib.extensions import Base
 
 
 class Balance(Base):
-    __tablename__ = 'balance'
 
     id = Column(Integer, primary_key=True)
     item_id = Column(Integer, ForeignKey('items.id'), nullable=False)
@@ -39,4 +38,4 @@ class Balance(Base):
 
     @classmethod
     def all(cls):
-        return db.query(cls).order_by(desc(cls.datetime)).all()
+        return cls.db.query(cls).order_by(desc(cls.datetime)).all()

@@ -5,7 +5,6 @@ from lib.extensions import Base, db
 
 
 class Places(Base):
-    __tablename__ = 'places'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
@@ -28,7 +27,7 @@ class Places(Base):
 
     @classmethod
     def all(cls, location_id=None):
-        query = db.query(cls)
+        query = cls.db.query(cls)
         if location_id:
             return query.filter_by(location_id=location_id)
         return query.all()

@@ -1,9 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, func
-from lib.extensions import Base, db
+from lib.extensions import Base
 
 
 class Currencies(Base):
-    __tablename__ = 'currencies'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(3), unique=True, nullable=False)
@@ -17,7 +16,3 @@ class Currencies(Base):
     def __repr__(self):
         return "<Currencies(name='{:s}', sign='{:s}', datetime_created='{" \
                ":s}')>".format(self.name, self.sign, self.datetime_created)
-
-    @classmethod
-    def all(cls):
-        return db.query(cls).all()
