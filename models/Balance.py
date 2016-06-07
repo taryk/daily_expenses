@@ -2,6 +2,7 @@ from sqlalchemy import ForeignKey, Column, Integer, Float, SmallInteger, \
     Text, DateTime, func, desc
 from sqlalchemy.orm import relationship
 from lib.extensions import Base
+from lib.Utils import _log
 
 
 class Balance(Base):
@@ -40,3 +41,14 @@ class Balance(Base):
     @classmethod
     def all(cls):
         return cls.db.query(cls).order_by(desc(cls.datetime)).all()
+
+    @classmethod
+    def insert(cls, data=dict()):
+        try:
+            new_balance_record = cls(**data)
+            cls.db.add(new_balance_record)
+            cls.db.commit()
+            return new_balance_record.id
+        except Exception as e:
+            _log(e)
+            return

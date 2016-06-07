@@ -92,7 +92,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ]
             data = dict(zip(fields, map(self.get_value, fields)))
 
-            self.db_model.insert(data)
+            Balance.insert(data)
             self.clear_fields()
             self.table_view_model.load_data()
         else:

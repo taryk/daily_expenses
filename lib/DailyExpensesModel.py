@@ -3,7 +3,7 @@
 from lib.Utils import _log
 from lib.CustomQueryModel import CustomQueryModel
 from lib.extensions import db
-from models import Items, Balance
+from models import Items
 
 
 class DailyExpensesModel():
@@ -13,16 +13,6 @@ class DailyExpensesModel():
 
     def get_table_view_model(self):
         return CustomQueryModel(db=self.db).get_model()
-
-    def insert(self, data=dict()):
-        try:
-            new_balance_record = Balance(**data)
-            self.db.add(new_balance_record)
-            self.db.commit()
-            return new_balance_record.id
-        except Exception as e:
-            _log(e)
-            return
 
     def insert_item(self, name):
         try:
