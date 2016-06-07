@@ -5,10 +5,10 @@ from lib.SQLAlchemyTableModel import SQLAlchemyTableModel
 
 class CustomTableModel:
 
-    def __init__(self):
-        self.model = SQLAlchemyTableModel()
-        self.model.load_data()
-        self.model.describe_columns(
+    def __new__(cls):
+        model = SQLAlchemyTableModel()
+        model.load_data()
+        model.describe_columns(
             [
                 {
                     'title': 'Item',
@@ -69,6 +69,4 @@ class CustomTableModel:
                 },
             ]
         )
-
-    def get_model(self):
-        return self.model
+        return model

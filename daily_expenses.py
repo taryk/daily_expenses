@@ -45,7 +45,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.chbCurrentDate.setCheckState(Qt.Checked)
         self.chbCurrentTime.setCheckState(Qt.Checked)
 
-        self.table_view_model = CustomTableModel().get_model()
+        self.table_view_model = CustomTableModel()
         self.set_column_delegators({
             self.COL_ITEMS: ItemDelegator(self.tableView),
             self.COL_CATEGORIES: CategoryDelegator(self.tableView),
