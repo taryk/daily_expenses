@@ -3,7 +3,7 @@
 from lib.SQLAlchemyTableModel import SQLAlchemyTableModel
 
 
-class CustomQueryModel:
+class CustomTableModel:
 
     def __init__(self):
         self.model = SQLAlchemyTableModel()
