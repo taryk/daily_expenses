@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, func
 from lib.extensions import Base
+from lib.Utils import _log
 
 
 class Items(Base):
@@ -20,3 +21,14 @@ class Items(Base):
         return "<Items(name='{:s}', description='{:s}', " \
                "datetime_created='{:s}')>" \
             .format(self.name, self.description, self.datetime_created)
+
+    @classmethod
+    def insert(cls, name):
+        try:
+            new_item = Items(name=name)
+            cls.db.add(new_item)
+            cls.db.commit()
+            return new_item.id
+        except Exception as e:
+            _log(e)
+            return
