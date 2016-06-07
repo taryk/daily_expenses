@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from lib.SQLAlchemyTableModel import SQLAlchemyTableModel
+from lib.extensions import db
 
 
 class CustomQueryModel:
 
-    def __init__(self, db):
+    def __init__(self):
         self.model = SQLAlchemyTableModel(db=db)
         self.model.load_data()
         self.model.describe_columns(

@@ -8,7 +8,7 @@ from datetime import datetime
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5.QtCore import QDate, QTime, QTimer, pyqtSignal, Qt
 
-from lib.DailyExpensesModel import DailyExpensesModel
+from lib.CustomQueryModel import CustomQueryModel
 from lib.delegators import ItemDelegator, CategoryDelegator, UserDelegator, \
     PlaceDelegator
 from models import Balance, Items, Categories, Currencies, Places, \
@@ -45,10 +45,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.chbCurrentDate.setCheckState(Qt.Checked)
         self.chbCurrentTime.setCheckState(Qt.Checked)
 
-        # DB
-        self.db_model = DailyExpensesModel()
-
-        self.table_view_model = self.db_model.get_table_view_model()
+        self.table_view_model = CustomQueryModel().get_model()
         self.set_column_delegators({
             self.COL_ITEMS: ItemDelegator(self.tableView),
             self.COL_CATEGORIES: CategoryDelegator(self.tableView),
