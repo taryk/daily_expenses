@@ -3,11 +3,12 @@
 from PyQt5 import QtCore
 from PyQt5.QtCore import QAbstractTableModel
 from models import Balance
+from lib.extensions import db
 
 
 class SQLAlchemyTableModel(QAbstractTableModel):
 
-    def __init__(self, parent=None, db=None):
+    def __init__(self, parent=None):
         super(SQLAlchemyTableModel, self).__init__(parent)
         self.db = db
         self.columns = []
