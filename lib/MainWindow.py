@@ -15,7 +15,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.data_mapping = dict()
+        self.widgets = dict()
+        self.load_data(
+            [Currencies, self.cbCurrency],
+            [Categories, self.cbCategory],
+            [Items,      self.cbItem],
+            [Locations,  self.cbLocation],
+            [Places,     self.cbWhere],
+            [Users,      self.cbByWhom],
+            [Measures,   self.cbUnits],
+        )
 
         self.btnAdd.clicked.connect(self.add_item)
         self.chbCurrentDate.toggled.connect(self.current_date)
@@ -33,15 +42,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.chbCurrentDate.setCheckState(Qt.Checked)
         self.chbCurrentTime.setCheckState(Qt.Checked)
 
-        self.load_data(
-            [Currencies, self.cbCurrency],
-            [Categories, self.cbCategory],
-            [Items,      self.cbItem],
-            [Locations,  self.cbLocation],
-            [Places,     self.cbWhere],
-            [Users,      self.cbByWhom],
-            [Measures,   self.cbUnits],
-        )
         self.clear_fields()
 
     def change_currency(self):
@@ -74,7 +74,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return getattr(self, get_value_method)()
         else:
             model_class = next(
-                model_class for model_class in self.data_mapping.keys()
+                model_class for model_class in self.widgets.keys()
                 if model_class.__singular__ + '_id' == what
             )
             if model_class:
@@ -91,7 +91,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return msg_box.exec_() == QMessageBox.Save
 
     def get_current_id_of(self, model_class):
-        widget = self.data_mapping[model_class]
+        widget = self.widgets[model_class]
         if widget:
             return widget.itemData(widget.currentIndex())['id']
         else:
@@ -168,10 +168,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return False
         return True
 
-    def load_data(self, *data_mapping):
-        for details in data_mapping:
-            self.data_mapping[details[0]] = details[1]
-        for details in data_mapping:
+    def load_data(self, *class_widget_list):
+        for details in class_widget_list:
+            self.widgets[details[0]] = details[1]
             self._load_things(*details)
 
     def _load_things(self, model_class, widget):
@@ -186,7 +185,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             widget.addItem(thing.title(), thing.extra_data())
 
     def reload(self, things):
-        self._load_things(things, self.data_mapping[things])
+        self._load_things(things, self.widgets[things])
 
     def clear_fields(self):
         self.spinboxMoney.setValue(0.0)
