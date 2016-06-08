@@ -3,9 +3,6 @@ from datetime import datetime
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5.QtCore import QDate, QTime, QTimer, Qt
 
-from lib.CustomTableModel import CustomTableModel
-from lib.delegators import ItemDelegator, CategoryDelegator, UserDelegator, \
-    PlaceDelegator
 from models import Balance, Items, Categories, Currencies, Places, \
     Locations, Measures, Users
 from lib.Utils import _log
@@ -13,11 +10,6 @@ from ui.ui_dailyexpenses import Ui_MainWindow
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-
-    COL_ITEMS = 0
-    COL_CATEGORIES = 3
-    COL_USERS = 4
-    COL_PLACES = 5
 
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -41,17 +33,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.chbCurrentDate.setCheckState(Qt.Checked)
         self.chbCurrentTime.setCheckState(Qt.Checked)
 
-        self.table_view_model = CustomTableModel()
-        self.set_column_delegators({
-            self.COL_ITEMS: ItemDelegator(self.tableView),
-            self.COL_CATEGORIES: CategoryDelegator(self.tableView),
-            self.COL_USERS: UserDelegator(self.tableView),
-            self.COL_PLACES: PlaceDelegator(self.tableView),
-        })
-
-        self.tableView.setModel(self.table_view_model)
-        self.tableView.show()
-
         self.load_data(
             [Currencies, self.cbCurrency],
             [Categories, self.cbCategory],
@@ -62,10 +43,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             [Measures,   self.cbUnits],
         )
         self.clear_fields()
-
-    def set_column_delegators(self, widgets):
-        for column, widget in widgets.items():
-            self.tableView.setItemDelegateForColumn(column, widget)
 
     def change_currency(self):
         self.spinboxMoney.setPrefix(
@@ -87,7 +64,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             Balance.insert(data)
             self.clear_fields()
-            self.table_view_model.load_data()
+            self.tableView.model().load_data()
         else:
             _log('failed to add')
 

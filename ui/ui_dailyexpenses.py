@@ -236,7 +236,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.pageTable)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.tableView = QtWidgets.QTableView(self.pageTable)
+        self.tableView = BalanceTable(self.pageTable)
         self.tableView.setObjectName("tableView")
         self.verticalLayout_3.addWidget(self.tableView)
         self.tabWidget.addTab(self.pageTable, "")
@@ -290,3 +290,4 @@ class Ui_MainWindow(object):
         self.actionClear.setText(_translate("MainWindow", "Clear"))
         self.actionUndo.setText(_translate("MainWindow", "Undo"))
 
+from lib.BalanceTable import BalanceTable
