@@ -14,8 +14,8 @@ class ComboBoxDelegate(QItemDelegate):
 
     def createEditor(self, parent, option, index):
         cb_categories = QComboBox(parent)
-        for thing in self.model_class.all():
-            cb_categories.addItem(getattr(thing, self.show_field), thing.id)
+        for entity in self.model_class.all():
+            cb_categories.addItem(getattr(entity, self.show_field), entity.id)
         return cb_categories
 
     def setEditorData(self, editor, index):
