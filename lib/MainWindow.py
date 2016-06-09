@@ -26,7 +26,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             [Measures,   self.cbUnits],
         )
 
-        self.btnAdd.clicked.connect(self.add_item)
+        self.btnAdd.clicked.connect(self.add_balance_record)
         self.chbCurrentDate.toggled.connect(self.current_date)
         self.chbCurrentTime.toggled.connect(self.current_time)
         self.cbCurrency.currentIndexChanged.connect(self.change_currency)
@@ -53,7 +53,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def change_location(self):
         self.reload(Places)
 
-    def add_item(self):
+    def add_balance_record(self):
         fields = [
             'item_id',    'category_id', 'user_id',  'cost', 'qty',
             'measure_id', 'is_spending', 'place_id', 'note', 'datetime',
