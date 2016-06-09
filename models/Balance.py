@@ -51,4 +51,5 @@ class Balance(Base):
             return new_balance_record.id
         except Exception as e:
             _log(e)
+            cls.db.rollback()
             return

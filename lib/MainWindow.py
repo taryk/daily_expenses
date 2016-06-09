@@ -54,19 +54,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.reload(Places)
 
     def add_item(self):
-        if self.validate():
-            fields = [
-                'item_id',    'category_id', 'user_id',  'cost', 'qty',
-                'measure_id', 'is_spending', 'place_id', 'note', 'datetime',
-                'currency_id'
-            ]
+        fields = [
+            'item_id',    'category_id', 'user_id',  'cost', 'qty',
+            'measure_id', 'is_spending', 'place_id', 'note', 'datetime',
+            'currency_id'
+        ]
+        try:
             data = dict(zip(fields, map(self.get_value, fields)))
-
             Balance.insert(data)
-            self.clear_fields()
-            self.tableView.model().load_data()
-        else:
-            _log('failed to add')
+        except Exception as e:
+            _log("Can't add a record.", e)
+            return
+        self.clear_fields()
+        self.tableView.model().load_data()
 
     def get_value(self, entity):
         get_value_method = 'get_' + entity
@@ -80,7 +80,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if model_class:
                 return self.get_current_id_of(model_class)
             else:
-                raise Exception('Unknown entity "{:s}"'.format(entity))
+                raise Exception('Unknown entity "{:s}".'.format(entity))
 
     def msg_confirmation(self, text, info):
         msg_box = QMessageBox()
@@ -95,16 +95,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if widget:
             return widget.itemData(widget.currentIndex())['id']
         else:
-            raise Exception("Unknown entity {:s}".format(model_class))
+            raise Exception("Unknown entity {:s}.".format(model_class))
 
     def get_item_id(self):
         item_index = self.cbItem.findText(self.cbItem.currentText())
         if item_index >= 0:
             return self.cbItem.itemData(item_index)['id']
 
-        if not self.msg_confirmation("Cannot find such item in DB.",
+        if not self.msg_confirmation("Cannot find such an item in the DB.",
                                      "Would you like to add this one?"):
-            raise Exception("don't save anything")
+            return None
 
         item_id = Items.insert(name=self.cbItem.currentText())
         if item_id:
@@ -152,21 +152,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.time_timer.stop()
         self.timeEdit.setEnabled(not current)
-
-    def validate(self):
-        if len(self.cbItem.lineEdit().text()) == 0:
-            _log('item cannot be null')
-            return False
-        if len(self.cbCategory.lineEdit().text()) == 0:
-            _log('category cannot be null')
-            return False
-        if len(self.cbWhere.lineEdit().text()) == 0:
-            _log('place cannot be null')
-            return False
-        if len(self.cbByWhom.lineEdit().text()) == 0:
-            _log('who cannot be null')
-            return False
-        return True
 
     def load_data(self, *class_widget_list):
         for details in class_widget_list:

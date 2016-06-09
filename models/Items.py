@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, func
+from sqlalchemy.orm import validates
 from lib.extensions import Base
-from lib.Utils import _log
 
 
 class Items(Base):
@@ -22,13 +22,15 @@ class Items(Base):
                "datetime_created='{:s}')>" \
             .format(self.name, self.description, self.datetime_created)
 
+    @validates('name')
+    def validate_name(self, key, name):
+        if not name:
+            raise Exception("Item's name can't be empty.")
+        return name
+
     @classmethod
     def insert(cls, name):
-        try:
-            new_item = Items(name=name)
-            cls.db.add(new_item)
-            cls.db.commit()
-            return new_item.id
-        except Exception as e:
-            _log(e)
-            return
+        new_item = Items(name=name)
+        cls.db.add(new_item)
+        cls.db.commit()
+        return new_item.id
