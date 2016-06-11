@@ -92,7 +92,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def get_current_id_of(self, model_class):
         widget = self.widgets[model_class]
-        if widget:
+        if widget is not None:
+            if widget.currentIndex() < 0:
+                return None
             return widget.itemData(widget.currentIndex())['id']
         else:
             raise Exception("Unknown entity {:s}.".format(model_class.__name__))
