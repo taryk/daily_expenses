@@ -95,7 +95,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if widget:
             return widget.itemData(widget.currentIndex())['id']
         else:
-            raise Exception("Unknown entity {:s}.".format(model_class))
+            raise Exception("Unknown entity {:s}.".format(model_class.__name__))
 
     def get_item_id(self):
         item_index = self.cbItem.findText(self.cbItem.currentText())
