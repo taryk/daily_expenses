@@ -178,6 +178,5 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.spinboxMoney.setValue(0.0)
         self.spinboxQty.setValue(1.0)
         self.cbItem.setCurrentIndex(-1)
-        self.spinboxQty.setValue(1.0)
         self.cbUnits.setCurrentIndex(0)
         self.textNote.clear()
