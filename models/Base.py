@@ -8,6 +8,7 @@ class Base(object):
         return cls.__name__.lower()
 
     id = None
+    __table_args__ = {'sqlite_autoincrement': True}
 
     __singular__ = None
     __depend_on__ = ()
