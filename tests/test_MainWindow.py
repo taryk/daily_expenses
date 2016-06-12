@@ -1,7 +1,8 @@
 import pytest
 from datetime import datetime
 from PyQt5 import QtCore
-from models import Items
+from models import Items, Categories, Currencies, Measures, Users, \
+    Locations, Places, Balance
 
 
 class TestMainWindow:
@@ -30,6 +31,11 @@ class TestMainWindow:
         """
         from lib.extensions import db
         return db
+
+    def teardown_method(self, _):
+        for model_class in (Items, Categories, Currencies, Measures,
+                            Users, Locations, Places, Balance):
+            model_class.db.query(model_class).delete()
 
     def test_default_values(self, mainwindow):
         """Make sure all fields contain default values.
