@@ -1,5 +1,8 @@
+import random
+import string
 import pytest
 from datetime import datetime
+from sqlalchemy import String, Integer
 from PyQt5 import QtCore
 from models import Items, Categories, Currencies, Measures, Users, \
     Locations, Places, Balance
@@ -65,9 +68,70 @@ class TestMainWindow:
     def test_add_new_item(self, qtbot, mainwindow, db):
         """Make sure we can add a new item.
         """
-        new_item_name = 'New Item'
+        new_item_name = self._generate_random_string()
         mainwindow.cbItem.setCurrentText(new_item_name)
         qtbot.mouseClick(mainwindow.btnAdd, QtCore.Qt.LeftButton)
         assert db.query(Items).filter(
             Items.name == new_item_name).count() == 1, \
             'The item was added to the DB'
+
+    def _generate_random_string(self, length=10):
+        """Generates a random string with a given length.
+        It uses all ascii letters (both upper and lower case) and digits.
+        """
+        return ''.join(random.SystemRandom().choice(
+            string.ascii_letters + string.digits) for _ in range(length))
+
+    def _generate_required_data(self, model_class):
+        """Returns a dict with the bare minimum of data required to create an
+        instance of a supplied model class.
+        It detects required fields by checking if they can be NULL in the DB
+        table model.
+        """
+        return {
+            column.name: {
+                String: lambda: self._generate_random_string(
+                    column.type.length),
+                Integer: lambda: 1,
+            }[column.type.__class__]()
+            for column in filter(
+                lambda column:
+                    # It's a required column.
+                    not column.nullable and
+                    # It's not a primary key.
+                    not column.primary_key and
+                    # And it's either a string or an integer.
+                    isinstance(column.type, (String, Integer)),
+                model_class.__table__.columns.values()
+            )
+        }
+
+    def _populate(self, model_class, count=1):
+        """Creates, stores, and returns a list of entities filled with random
+        data.
+        """
+        entities = [model_class(**self._generate_required_data(model_class))
+                    for _ in range(count)]
+        model_class.db.add_all(entities)
+        model_class.db.commit()
+        return entities
+
+    def test_entities(self, mainwindow):
+        """Make sure all entities get shown correctly - they should have both
+        correct titles and extra data.
+        """
+        for model_class in (Items, Categories, Currencies, Measures,
+                            Users, Locations, Places):
+            entities = self._populate(model_class, count=5)
+            mainwindow.reload(model_class)
+            widget = mainwindow.widgets[model_class]
+
+            db_titles = map(lambda c: c.title(), entities)
+            cb_titles = [widget.itemText(i) for i in range(widget.count())]
+            assert list(db_titles) == cb_titles, \
+                model_class.__singular__.title() + ' titles are the same'
+
+            db_extra_data = map(lambda c: c.extra_data(), entities)
+            cb_extra_data = [widget.itemData(i) for i in range(widget.count())]
+            assert list(db_extra_data) == cb_extra_data, \
+                model_class.__singular__.title() + ' extra data are the same'
