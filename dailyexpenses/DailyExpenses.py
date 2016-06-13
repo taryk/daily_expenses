@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QApplication
-from dailyexpenses.extensions import DataBase
+from dailyexpenses.DataBase import DataBase
 from dailyexpenses.MainWindow import MainWindow
 
 

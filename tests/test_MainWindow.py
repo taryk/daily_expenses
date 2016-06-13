@@ -4,7 +4,7 @@ import pytest
 from datetime import datetime
 from sqlalchemy import String, Integer
 from PyQt5 import QtCore
-from dailyexpenses.extensions import DataBase
+from dailyexpenses.DataBase import DataBase
 from models import Items, Categories, Currencies, Measures, Users, \
     Locations, Places, Balance
 
