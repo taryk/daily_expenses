@@ -20,10 +20,10 @@ class Balance(Base):
     user = relationship("Users")
     place_id = Column(Integer, ForeignKey('places.id'), nullable=False)
     place = relationship("Places")
-    qty = Column(Float, nullable=False)
+    qty = Column(Float, nullable=False, default=1.0)
     measure_id = Column(Integer, ForeignKey('measures.id'), nullable=False)
     measure = relationship("Measures")
-    is_spending = Column(SmallInteger, nullable=False)
+    is_spending = Column(SmallInteger, nullable=False, default=1)
     note = Column(Text, nullable=True)
     datetime = Column(DateTime, default=func.current_timestamp(),
                       nullable=False)
