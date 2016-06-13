@@ -10,11 +10,6 @@ brew install python3 qt5
 pip3 install pyqt5
 ```
 
-## Install DB
-```
-sqlite3 db/daily_expenses.db < db/daily_expenses.default.sql
-```
-
 ## Generate the UI
 
 Although it's already generated, if you make any changes to the .ui file, you'll
