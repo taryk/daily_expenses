@@ -4,6 +4,7 @@ import pytest
 from datetime import datetime
 from sqlalchemy import String, Integer
 from PyQt5 import QtCore
+from dailyexpenses.extensions import DataBase
 from models import Items, Categories, Currencies, Measures, Users, \
     Locations, Places, Balance
 
@@ -12,33 +13,32 @@ class TestMainWindow:
     """A test class for MainWindow.
     """
 
+    def setup_class(self):
+        """Just creates a new DB instance at the beginning of the test class.
+        """
+        self.db = DataBase()
+
+    def teardown_method(self, _):
+        """Clear all tables.
+        """
+        for model_class in (Items, Categories, Currencies, Measures,
+                            Users, Locations, Places, Balance):
+            self.db.query(model_class).delete()
+
     @pytest.fixture
     def mainwindow(self, qtbot, mock):
         """Creates and returns a new mainwindow object, mocks its pop-up
         windows, and initialises the DB.
         """
         from dailyexpenses.MainWindow import MainWindow
-        import dailyexpenses.extensions
         # Create the tables in an in-memory DB.
-        dailyexpenses.extensions.init_db()
+        DataBase.create_tables()
         mainwindow = MainWindow()
         qtbot.addWidget(mainwindow)
         # msg_confirmation shows a pop-up window that is impossible to access
         # from the tests, so let's just mock it.
         mock.patch.object(MainWindow, 'msg_confirmation', return_value=True)
         return mainwindow
-
-    @pytest.fixture
-    def db(self):
-        """Returns a DB session object.
-        """
-        from dailyexpenses.extensions import db
-        return db
-
-    def teardown_method(self, _):
-        for model_class in (Items, Categories, Currencies, Measures,
-                            Users, Locations, Places, Balance):
-            model_class.db.query(model_class).delete()
 
     def test_default_values(self, mainwindow):
         """Make sure all fields contain default values.
@@ -65,13 +65,13 @@ class TestMainWindow:
         assert mainwindow.tableView.model().rowCount() == 0, \
             'There are no expenses yet, so the balance table is empty'
 
-    def test_add_new_item(self, qtbot, mainwindow, db):
+    def test_add_new_item(self, qtbot, mainwindow):
         """Make sure we can add a new item.
         """
         new_item_name = self._generate_random_string()
         mainwindow.cbItem.setCurrentText(new_item_name)
         qtbot.mouseClick(mainwindow.btnAdd, QtCore.Qt.LeftButton)
-        assert db.query(Items).filter(
+        assert self.db.query(Items).filter(
             Items.name == new_item_name).count() == 1, \
             'The item was added to the DB'
 

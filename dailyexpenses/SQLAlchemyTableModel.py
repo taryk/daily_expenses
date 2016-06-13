@@ -3,14 +3,12 @@
 from PyQt5 import QtCore
 from PyQt5.QtCore import QAbstractTableModel
 from models import Balance
-from dailyexpenses.extensions import db
 
 
 class SQLAlchemyTableModel(QAbstractTableModel):
 
     def __init__(self, parent=None):
         super(SQLAlchemyTableModel, self).__init__(parent)
-        self.db = db
         self.columns = []
         self.table_data = []
 
@@ -80,7 +78,7 @@ class SQLAlchemyTableModel(QAbstractTableModel):
                               value['extra_data'])
             else:
                 column['set'](self.table_data[index.row()], value)
-            self.db.commit()
+            Balance.db.commit()
             return True
         return False
 
