@@ -1,7 +1,7 @@
-from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.ext.declarative import declared_attr, declarative_base
 
 
-class Base(object):
+class ModelBase(object):
 
     @declared_attr
     def __tablename__(cls):
@@ -31,3 +31,5 @@ class Base(object):
     @classmethod
     def all(cls):
         return cls.db.query(cls).all()
+
+Base = declarative_base(cls=ModelBase)

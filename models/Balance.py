@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, Column, Integer, Float, SmallInteger, \
     Text, DateTime, func, desc
 from sqlalchemy.orm import relationship
-from dailyexpenses.extensions import Base
+from models import Base
 from dailyexpenses.Utils import _log
 
 

@@ -1,6 +1,5 @@
 import sys
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from models import Base
 
@@ -10,7 +9,6 @@ DB_FILE = '/db/daily_expenses.db' \
 
 engine = create_engine('sqlite://' + DB_FILE, echo=True)
 
-Base = declarative_base(cls=Base)
 
 Session = sessionmaker(bind=engine)
 db = Session()

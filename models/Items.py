@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, func
 from sqlalchemy.orm import validates
-from dailyexpenses.extensions import Base
+from models import Base
 
 
 class Items(Base):

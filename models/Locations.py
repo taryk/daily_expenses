@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, \
     UniqueConstraint, func
-from dailyexpenses.extensions import Base
+from models import Base
 
 
 class Locations(Base):

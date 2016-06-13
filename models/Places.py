@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, Column, Integer, String, Text, DateTime, \
     UniqueConstraint, func
 from sqlalchemy.orm import relationship
-from dailyexpenses.extensions import Base, db
+from models import Base
 from models import Locations
 
 

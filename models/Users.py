@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, func
-from dailyexpenses.extensions import Base
+from models import Base
 
 
 class Users(Base):
