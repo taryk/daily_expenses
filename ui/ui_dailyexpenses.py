@@ -290,4 +290,4 @@ class Ui_MainWindow(object):
         self.actionClear.setText(_translate("MainWindow", "Clear"))
         self.actionUndo.setText(_translate("MainWindow", "Undo"))
 
-from lib.BalanceTable import BalanceTable
+from dailyexpenses.BalanceTable import BalanceTable

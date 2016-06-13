@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QTableView
-from lib.delegators import ItemDelegator, CategoryDelegator, UserDelegator, \
+from dailyexpenses.delegators import ItemDelegator, CategoryDelegator, UserDelegator, \
     PlaceDelegator
-from lib.CustomTableModel import CustomTableModel
+from dailyexpenses.CustomTableModel import CustomTableModel
 
 
 class BalanceTable(QTableView):

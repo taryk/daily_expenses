@@ -17,10 +17,10 @@ class TestMainWindow:
         """Creates and returns a new mainwindow object, mocks its pop-up
         windows, and initialises the DB.
         """
-        from lib.MainWindow import MainWindow
-        import lib.extensions
+        from dailyexpenses.MainWindow import MainWindow
+        import dailyexpenses.extensions
         # Create the tables in an in-memory DB.
-        lib.extensions.init_db()
+        dailyexpenses.extensions.init_db()
         mainwindow = MainWindow()
         qtbot.addWidget(mainwindow)
         # msg_confirmation shows a pop-up window that is impossible to access
@@ -32,7 +32,7 @@ class TestMainWindow:
     def db(self):
         """Returns a DB session object.
         """
-        from lib.extensions import db
+        from dailyexpenses.extensions import db
         return db
 
     def teardown_method(self, _):

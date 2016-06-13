@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from lib.SQLAlchemyTableModel import SQLAlchemyTableModel
+from dailyexpenses.SQLAlchemyTableModel import SQLAlchemyTableModel
 
 
 class CustomTableModel:

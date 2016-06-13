@@ -1,4 +1,4 @@
-from lib.ComboBoxDelegate import ComboBoxDelegate
+from dailyexpenses.ComboBoxDelegate import ComboBoxDelegate
 from models import Places
 
 

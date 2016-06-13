@@ -3,7 +3,7 @@
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlRelationalTableModel, QSqlRelation
 from PyQt5.QtCore import Qt
-from lib.Utils import _log
+from dailyexpenses.Utils import _log
 
 
 class TableModel():

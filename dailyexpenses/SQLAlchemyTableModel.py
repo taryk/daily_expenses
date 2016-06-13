@@ -3,7 +3,7 @@
 from PyQt5 import QtCore
 from PyQt5.QtCore import QAbstractTableModel
 from models import Balance
-from lib.extensions import db
+from dailyexpenses.extensions import db
 
 
 class SQLAlchemyTableModel(QAbstractTableModel):

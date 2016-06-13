@@ -5,7 +5,7 @@ from PyQt5.QtCore import QDate, QTime, QTimer, Qt
 
 from models import Balance, Items, Categories, Currencies, Places, \
     Locations, Measures, Users
-from lib.Utils import _log
+from dailyexpenses.Utils import _log
 from ui.ui_dailyexpenses import Ui_MainWindow
 
 

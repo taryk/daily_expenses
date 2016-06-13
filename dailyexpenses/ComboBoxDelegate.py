@@ -2,7 +2,7 @@
 
 from PyQt5.QtWidgets import QItemDelegate, QComboBox
 from PyQt5.QtCore import Qt
-from lib.Utils import _log
+from dailyexpenses.Utils import _log
 
 
 class ComboBoxDelegate(QItemDelegate):

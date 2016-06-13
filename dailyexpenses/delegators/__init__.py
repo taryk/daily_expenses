@@ -1,0 +1,4 @@
+from dailyexpenses.delegators.ItemDelegator import ItemDelegator
+from dailyexpenses.delegators.CategoryDelegator import CategoryDelegator
+from dailyexpenses.delegators.UserDelegator import UserDelegator
+from dailyexpenses.delegators.PlaceDelegator import PlaceDelegator
