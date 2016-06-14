@@ -21,7 +21,6 @@ class SQLAlchemyTableModel(QAbstractTableModel):
         self.table_data = Balance.all()
 
     def rowCount(self, parent=None, *args, **kwargs):
-        # FIXME after adding new record this value stays the same
         return len(self.table_data)
 
     def columnCount(self, parent=None, *args, **kwargs):

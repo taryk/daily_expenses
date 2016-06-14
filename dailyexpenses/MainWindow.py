@@ -66,7 +66,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             _log("Can't add a record.", e)
             return
         self.clear_fields()
-        self.tableView.model().load_data()
+        model = self.tableView.model()
+        model.insertRow(0)
+        model.load_data()
 
     def get_value(self, entity):
         get_value_method = 'get_' + entity
