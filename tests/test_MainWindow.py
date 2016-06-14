@@ -25,7 +25,7 @@ class TestMainWindow:
                             Users, Locations, Places, Balance):
             self.db.query(model_class).delete()
 
-    @pytest.fixture
+    @pytest.fixture(scope='function')
     def mainwindow(self, qtbot, mock):
         """Creates and returns a new mainwindow object, mocks its pop-up
         windows, and initialises the DB.
