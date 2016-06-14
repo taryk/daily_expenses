@@ -20,12 +20,11 @@ class SQLAlchemyTableModel(QAbstractTableModel):
     def load_data(self):
         self.table_data = Balance.all()
 
-    def rowCount(self, _parent=QtCore.QModelIndex()):
-        # return self.select_query.result().size()
+    def rowCount(self, parent=None, *args, **kwargs):
         # FIXME after adding new record this value stays the same
         return len(self.table_data)
 
-    def columnCount(self, _parent=QtCore.QModelIndex()):
+    def columnCount(self, parent=None, *args, **kwargs):
         return len(self.columns)
 
     def data(self, index, role=QtCore.Qt.DisplayRole):
@@ -46,25 +45,27 @@ class SQLAlchemyTableModel(QAbstractTableModel):
                 return self.table_data[section].id
         return None
 
-    def insertRows(self, row, count, parent=QtCore.QModelIndex()):
+    def insertRows(self, row, count, parent=QtCore.QModelIndex(),
+                   *args, **kwargs):
         for i in range(row, row + count):
             self.insertRow(i)
         return True
 
-    def insertRow(self, row, parent=QtCore.QModelIndex()):
-        QtCore.QAbstractTableModel.beginInsertRows(self, parent, row, row)
+    def insertRow(self, row, parent=QtCore.QModelIndex(), *args, **kwargs):
+        self.beginInsertRows(parent, row, row)
         self.table_data[row] = Balance()
-        QtCore.QAbstractTableModel.endInsertRows(self)
+        self.endInsertRows()
         return True
 
-    def removeRow(self, row, parent=QtCore.QModelIndex()):
-        QtCore.QAbstractTableModel.beginRemoveRows(self, parent, row, row)
+    def removeRow(self, row, parent=QtCore.QModelIndex(), *args, **kwargs):
+        self.beginRemoveRows(parent, row, row)
         self.table_data.remove(row)
         # TODO remove from db table
-        QtCore.QAbstractTableModel.endRemoveRows(self)
+        self.endRemoveRows()
         return True
 
-    def removeRows(self, row, count, parent=QtCore.QModelIndex()):
+    def removeRows(self, row, count, parent=QtCore.QModelIndex(),
+                   *args, **kwargs):
         for i in range(row, row + count):
             self.removeRow(i)
         return True
