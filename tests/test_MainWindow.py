@@ -93,7 +93,7 @@ class TestMainWindow:
                     mainwindow.get_current_id_of(depend_on)
 
             entities = self._populate(model_class, predefined_data, count=2)
-            attribute_name = model_class.__singular__ + '_id'
+            attribute_name = model_class.foreign_column_name()
             if hasattr(Balance, attribute_name):
                 balance_attribute = getattr(Balance, attribute_name)
                 values[balance_attribute] = entities[1].id

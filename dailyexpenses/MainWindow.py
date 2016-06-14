@@ -75,7 +75,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             model_class = next(
                 model_class for model_class in self.widgets.keys()
-                if model_class.__singular__ + '_id' == entity
+                if model_class.foreign_column_name() == entity
             )
             if model_class:
                 return self.get_current_id_of(model_class)
@@ -164,7 +164,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         widget.clear()
         args = dict()
         for depend_on in model_class.__depend_on__:
-            id_column = depend_on.__singular__ + '_id'
+            id_column = depend_on.foreign_column_name()
             args[id_column] = self.get_current_id_of(depend_on)
 
         entities = model_class.all(**args)

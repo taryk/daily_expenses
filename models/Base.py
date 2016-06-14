@@ -29,6 +29,13 @@ class ModelBase(object):
         )
 
     @classmethod
+    def foreign_column_name(cls):
+        """Returns a general name of a foreign key a related table uses to
+        point to this table.
+        """
+        return cls.__singular__ + '_id'
+
+    @classmethod
     def all(cls):
         return cls.db.query(cls).all()
 
