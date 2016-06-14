@@ -75,6 +75,41 @@ class TestMainWindow:
             Items.name == new_item_name).count() == 1, \
             'The item was added to the DB'
 
+    def test_add_new_balance_record(self, qtbot, mainwindow):
+        """Make sure we can add a new balance record.
+        """
+        values = {
+            Balance.cost: 153.32,
+            Balance.qty: 11,
+            Balance.note: ' '.join(
+                map(lambda _: self._generate_random_string(), range(10))
+            )
+        }
+        for model_class in (Items, Categories, Currencies, Measures,
+                            Users, Locations, Places):
+            predefined_data = dict()
+            for depend_on in model_class.__depend_on__:
+                predefined_data[depend_on.foreign_column_name()] = \
+                    mainwindow.get_current_id_of(depend_on)
+
+            entities = self._populate(model_class, predefined_data, count=2)
+            attribute_name = model_class.__singular__ + '_id'
+            if hasattr(Balance, attribute_name):
+                balance_attribute = getattr(Balance, attribute_name)
+                values[balance_attribute] = entities[1].id
+            mainwindow.reload(model_class)
+            mainwindow.widgets[model_class].setCurrentIndex(1)
+
+        mainwindow.spinboxMoney.setValue(values[Balance.cost])
+        mainwindow.spinboxQty.setValue(values[Balance.qty])
+        mainwindow.textNote.setPlainText(values[Balance.note])
+        qtbot.mouseClick(mainwindow.btnAdd, QtCore.Qt.LeftButton)
+        query = self.db.query(Balance)
+        for column, value in values.items():
+            query = query.filter(column == value)
+        assert query.count() == 1, \
+            'The expense record has been added to the DB'
+
     def _generate_random_string(self, length=10):
         """Generates a random string with a given length.
         It uses all ascii letters (both upper and lower case) and digits.
@@ -88,12 +123,15 @@ class TestMainWindow:
         It detects required fields by checking if they can be NULL in the DB
         table model.
         """
-        return {
-            column.name: {
+        def _get_column_value(column):
+            return {
                 String: lambda: self._generate_random_string(
                     column.type.length),
                 Integer: lambda: 1,
             }[column.type.__class__]()
+
+        return {
+            column.name: _get_column_value(column)
             for column in filter(
                 lambda column:
                     # It's a required column.
@@ -106,12 +144,21 @@ class TestMainWindow:
             )
         }
 
-    def _populate(self, model_class, count=1):
-        """Creates, stores, and returns a list of entities filled with random
-        data.
+    def _populate(self, model_class, predefined_data=dict(), count=1):
+        """Creates, stores, and returns a list of entities filled with randomly
+        generated and/or predefined data.
         """
-        entities = [model_class(**self._generate_required_data(model_class))
-                    for _ in range(count)]
+        def required_data():
+            """Merges randomly generated data with predefined one.
+            """
+            return {
+                # Generate a bare minimum of required data.
+                **self._generate_required_data(model_class),
+                # If there are any predefined values, include them too.
+                **predefined_data
+            }
+
+        entities = [model_class(**required_data()) for _ in range(count)]
         model_class.db.add_all(entities)
         model_class.db.commit()
         return entities
