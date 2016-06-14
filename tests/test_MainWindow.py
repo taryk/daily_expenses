@@ -65,15 +65,32 @@ class TestMainWindow:
         assert mainwindow.tableView.model().rowCount() == 0, \
             'There are no expenses yet, so the balance table is empty'
 
-    def test_add_new_item(self, qtbot, mainwindow):
+    def test_add_new_item(self, qtbot, mock, mainwindow):
         """Make sure we can add a new item.
         """
         new_item_name = self._generate_random_string()
-        mainwindow.cbItem.setCurrentText(new_item_name)
-        qtbot.mouseClick(mainwindow.btnAdd, QtCore.Qt.LeftButton)
-        assert self.db.query(Items).filter(
-            Items.name == new_item_name).count() == 1, \
-            'The item was added to the DB'
+        test_cases = [
+            {
+                'title': 'The item has not been added to the DB',
+                'msg_confirmation': False,
+                'items_matched': 0
+            },
+            {
+                'title': 'The item was added to the DB',
+                'msg_confirmation': True,
+                'items_matched': 1
+            },
+        ]
+        for test_case in test_cases:
+            mainwindow.cbItem.setCurrentText(new_item_name)
+            mock.patch.object(mainwindow, 'msg_confirmation',
+                              return_value=test_case['msg_confirmation'])
+            qtbot.mouseClick(mainwindow.btnAdd, QtCore.Qt.LeftButton)
+            assert self.db.query(Items).filter(
+                Items.name == new_item_name
+            ).count() == test_case['items_matched'], test_case['title']
+            assert mainwindow.cbItem.currentText() == '', \
+                'Item field gets cleared'
 
     def test_add_new_balance_record(self, qtbot, mainwindow):
         """Make sure we can add a new balance record.
